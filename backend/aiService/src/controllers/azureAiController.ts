@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-class azureAiController {
+class AzureAiController {
     async postReadDocument(req: Request, res: Response): Promise<void> {
         try {
             //Call Azure AI Service
@@ -16,4 +16,4 @@ class azureAiController {
     //ADD MORE FUNCTION AS NEED
 }
 
-export default new azureAiController;
+export default new AzureAiController;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class chatGptController {
+class ChatGptController {
     postQuestion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -22,4 +22,4 @@ class chatGptController {
         });
     }
 }
-exports.default = new chatGptController;
+exports.default = new ChatGptController;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-class chatGptController {
+class ChatGptController {
     async postQuestion(req: Request, res: Response): Promise<void> {
         try {
             //DO SOME TASKS HERE
@@ -14,4 +14,4 @@ class chatGptController {
     //ADD MORE FUNCTION AS NEED
 }
 
-export default new chatGptController;
+export default new ChatGptController;

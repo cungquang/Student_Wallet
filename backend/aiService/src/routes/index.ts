@@ -1,6 +1,6 @@
 import express from 'express';
-import chatGptController from '../controllers/chatGptController';
-import azureAiController from '../controllers/azureAiController';
+import ChatGptController from '../controllers/chatGptController';
+import AzureAiController from '../controllers/azureAiController';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 //Route
-router.get('/chatgpt', chatGptController.postQuestion);
-router.get('/azureai', azureAiController.postReadDocument)
+router.get('/chatgpt', ChatGptController.postQuestion);
+router.get('/azureai', AzureAiController.postReadDocument)
 
 export default router;
