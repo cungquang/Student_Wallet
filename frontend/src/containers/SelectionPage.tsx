@@ -4,6 +4,8 @@ import Footer from '../components/common/footer';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import budget from '../resources/budget.png';
+import assignment from '../resources/assignment.png';
+import resume from '../resources/resume.png';
 
 const SelectWrapper = styled.div`
     height: 100%;
@@ -41,6 +43,24 @@ const BudgetImg = styled.div`
     cursor: pointer;
 `;
 
+const AssignmentImg = styled.div`
+    width: 100%;
+    height: 400px;
+    background: url(${assignment}) center/cover no-repeat;
+    border-radius: 20px;
+    z-index: -1;
+    cursor: pointer;
+`;
+
+const ResumeImg = styled.div`
+    width: 100%;
+    height: 400px;
+    background: url(${resume}) center/cover no-repeat;
+    border-radius: 20px;
+    z-index: -1;
+    cursor: pointer;    
+`;
+
 const SelectionPage: React.FC = () => {
     const navigate = useNavigate();
 
@@ -57,8 +77,14 @@ const SelectionPage: React.FC = () => {
                     <div style={{fontSize: '35px', fontFamily: 'Inika'}}>Manage your budget</div>
                     <BudgetImg></BudgetImg>
                 </Options> 
-                <Options onClick={() => SwitchPage('/assignment')}>Track your assignments</Options> 
-                <Options onClick={() => SwitchPage('/resume')}>Assess your resume</Options> 
+                <Options onClick={() => SwitchPage('/assignment')}>
+                    <div style={{fontSize: '35px', fontFamily: 'Inika'}}>Track your assignments</div>
+                    <AssignmentImg></AssignmentImg>
+                </Options> 
+                <Options onClick={() => SwitchPage('/resume')}>
+                    <div style={{fontSize: '35px', fontFamily: 'Inika'}}>Assess your resume</div>
+                    <ResumeImg></ResumeImg>
+                </Options> 
             </SelectWrapper>
             <Footer />
         </div>
