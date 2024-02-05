@@ -88,6 +88,9 @@ const LoginView: React.FC = () => {
     const [isIDValid, setIsIDValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
 
+    const [id, setId] = useState('');
+    const [password, setPassword] = useState('');
+
     const toggleView = () => {
         if (isLogin) {
             setIsLogin((isLogin) => false);
@@ -99,21 +102,31 @@ const LoginView: React.FC = () => {
         <div>
             <Wrapper>
                 <Heading>UniKeep</Heading> 
-                <TextField type="text" placeholder="ID" />
-                <TextField type="text" placeholder="Password" />
+                <TextField
+                    type="text"
+                    placeholder="ID"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                />
+                <TextField
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <InvalidText isVisible={!isIDValid}>Invalid ID</InvalidText>
                 <LoginButton>{isLogin ? 'Sign Up' : 'Log In'}</LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
                 <LoginButton>
-                    {isLogin ? 'Sign Up With Google' : 'Log In With Google'}
+                    {isLogin ? 'Log In With Google': 'Sign Up With Google'}
                 </LoginButton>
                 <Line/>
                 <ViewChange>
                     <ViewText>
-                        {isLogin ? 'Already have an account?' : "Don't have an account?"}
+                        {isLogin ? "Don't have an account?" : 'Already have an account?'}
                     </ViewText>
                     <ViewButton onClick={toggleView}>
-                        {isLogin ? 'Log in' : 'Sign up'}
+                        {isLogin ? 'Sign up' : 'Log in'}
                     </ViewButton>
                 </ViewChange>
             </Wrapper>
