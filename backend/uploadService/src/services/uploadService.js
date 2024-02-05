@@ -26,7 +26,8 @@ class asyncUploadService {
             const blobStreamWrite = blobInstance.createWriteStream();
             
             //Create an instance - of promise => receive 2 args: resolve, reject
-            // 
+            //resolve -> handle the success
+            //reject -> handle failure
             return new Promise((resolve, reject) => {
                 //Success deliver the message
                 blobStreamWrite.on('finish', () =>{

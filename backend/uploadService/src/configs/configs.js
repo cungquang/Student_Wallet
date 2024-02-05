@@ -1,7 +1,7 @@
 class Configs {
     constructor() {
       this.connectionString = [
-        { uploadMongoUri: "mongodb-connection-string" }
+        { mongoDbUri: "mongodb-connection-string" }
       ];
       this.googleCloudInfo = {
         projectId: "hongquangcung301417603",
