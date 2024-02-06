@@ -76,7 +76,7 @@ class UploadService {
         }
     }
 
-    async asyncGetSignedUrl(objectName){
+    async asyncSignedUrl(objectName){
         const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
         return signedUri[0];
     }

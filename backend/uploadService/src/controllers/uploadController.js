@@ -25,7 +25,7 @@ class uploadController {
     async asyncGetSignedUrl(request, response) {
         try {
             const objectName = request.query.objectName;
-            const signedUrl = await this.uploadController.asyncGetSignedUrl(objectName)
+            const signedUrl = await this.uploadController.asyncSignedUrl(objectName)
 
             //Response
             response.status(200).send(signedUrl);
