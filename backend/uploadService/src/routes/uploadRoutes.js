@@ -13,8 +13,17 @@ class UploadRouter{
 
     configureUploadRoute(){
         //in multerUpload.single(must specify the field name in html use to keep the file)
-        router.post("/upload", multerUpload.single("fileInput"), (request, response) => {
-            this.uploadController.asyncUploadFile(response, request);
+        router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
+            try {
+                serviceResponse = await this.uploadController.asyncUploadFile(response, request);
+                
+                //Send a success response
+                response.status(200).send(serviceResponse);
+            }catch (error){
+                console.error('Error uploading file:', error);
+                response.status(500).send('Internal Server Error');
+            }
+            
         });
 
         return router;
