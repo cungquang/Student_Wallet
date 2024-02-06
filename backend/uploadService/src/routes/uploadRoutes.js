@@ -11,7 +11,7 @@ class UploadRouter{
         this.uploadController = uploadController
     }
 
-    configureUploadRoute(){
+    configureUploadRoute(request, response){
         this.router.post("/upload", multerUpload.single(), (request, response) => {
             this.uploadController.asyncUploadFile(response, request);
         });
