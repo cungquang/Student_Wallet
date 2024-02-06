@@ -1,25 +1,43 @@
 const { Storage } = require('@google-cloud/storage');
 const utils = require('../utils/utils');
-const configs = require('../configs/configs');
 
+/*
+const configs = require('../configs/configs');
 const BlobStorage = new Storage({
-    projectId: configs.projectId,
-    keyFilename: configs.credentialFilePath
+    projectId: configs.googleCloudInfo.projectId,
+    keyFilename: configs.googleCloudInfo.credentialFilePath
 });
+*/
+
+const optionSignedUrl = {
+    version: 'v4',                          //use v4 signing algorithm
+    action: 'read',                         //specify action
+    expires: Date.now() + 15*60*1000        //set limit time access - 15 minutes
+};
+
 
 class UploadService {
-    constructor() {
-        this.bucket = BlobStorage.bucket(configs.googleCloudInfo.bucketName);
+    constructor(config) {
+        this.config = config;
+        this.BlobStorage = new Storage({
+            projectId: this.config.googleCloudInfo.projectId,
+            keyFilename: this.config.googleCloudInfo.credentialFilePath
+        });
+
+        this.bucket = BlobStorage.bucket(this.config.googleCloudInfo.bucketName);
     }
 
-    async asyncUploadFile(file) {
+    //Upload the file to Google bucket
+    async asyncUploadObject(file) {
         try{
             if(!file) {
                 throw new Error('File does not exist');
             }
-            
+
+            const subpart = file.originalname.split('.')
+
             //Initate the blob
-            const blobInstance = this.bucket.file(utils.generateUuid());
+            const blobInstance = this.bucket.file(`${utils.generateUuid()}.${subpart[subpart.length - 1] }`);
             
             //Create a stream for writing
             const blobStreamWrite = blobInstance.createWriteStream();
@@ -30,7 +48,7 @@ class UploadService {
             return new Promise((resolve, reject) => {
                 //Success deliver the message
                 blobStreamWrite.on('finish', () =>{
-                    resolve('File Upload successfully')
+                    resolve(blobInstance.name);
                 });
 
                 //Catch error
@@ -44,6 +62,23 @@ class UploadService {
         }catch (error){
             throw error;
         }
+    }
+
+    async asyncGetObjectMetadata(objectName){
+        try {
+            // Get the object metadata
+            const [metadata] = await this.bucket.file(objectName).getMetadata();
+
+            return metadata;
+        } catch (error) {
+            console.error('Error fetching object metadata:', error);
+            throw error;
+        }
+    }
+
+    async asyncGetSignedUrl(objectName){
+        const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
+        return signedUri[0];
     }
 }
 

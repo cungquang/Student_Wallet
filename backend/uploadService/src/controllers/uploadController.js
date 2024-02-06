@@ -6,16 +6,19 @@ class uploadController {
 
     async asyncUploadFile(request, response) {
         try {
-            if (!request.file){
-                return response.status(400).send('Invalid request, no file uploaded.');
-            }
-            
             //Upload the file
-            const responseUrl = await this.uploadService.asyncUploadFile(request.fileUrl);
+            const objectName = await this.uploadService.asyncUploadObject(request.file);
+            console.log(objectName);
 
+            //Get object metadata
+            const metadata = await this.uploadService.asyncGetObjectMetadata(objectName);
+            const signedUri = await this.uploadService.asyncGetSignedUrl(objectName);
+            console.log(signedUri);
+            
             //Store data into database
 
-            response.status(200).send(responseUrl);
+
+            response.status(200).send(JSON.stringify(metadata));
         }catch(error){
             console.error('Error uploading file: ', error);
             response.status(500).json({ error: 'Internal Server Error'});
@@ -23,8 +26,15 @@ class uploadController {
     }
 
     async asyncGetUploadFileURL(request, response) {
-        console.log('return an upload url');
-    }
+        try {
+          console.log('Returning an upload URL');
+          // Depending on your use case, you might want to send a response to the client here
+          response.status(200).json({ message: 'Returning an upload URL' });
+        } catch (error) {
+          console.error('Error getting upload URL: ', error);
+          response.status(500).json({ error: 'Internal Server Error' });
+        }
+      }
 }
 
 module.exports = uploadController;
