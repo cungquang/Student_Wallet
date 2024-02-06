@@ -1,7 +1,8 @@
 class Configs {
     constructor() {
       this.connectionString = [
-        { mongoDbUri: "mongodb://34.130.86.92:27017/" }
+        { mongoDbUri_dev: "mongodb://34.130.86.92:27017/" },
+        { mongoDbUri_prod: "mongodb://10.188.0.2:27017/"}
       ];
       this.googleCloudInfo = {
         projectId: "hongquangcung301417603",
@@ -12,4 +13,4 @@ class Configs {
   }
 
 
-export default new Configs();
+module.exports = new Configs();

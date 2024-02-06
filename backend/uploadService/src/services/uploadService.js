@@ -2,20 +2,19 @@ const { Storage } = require('@google-cloud/storage');
 const utils = require('../utils/utils');
 const configs = require('../configs/configs');
 
-
-BlobStorage = new Storage({
+const BlobStorage = new Storage({
     projectId: configs.projectId,
     keyFilename: configs.credentialFilePath
 });
 
-class asyncUploadService {
+class UploadService {
     constructor() {
-        this.bucket = BlobStorage.bucket(configs.bucketName);
+        this.bucket = BlobStorage.bucket(configs.googleCloudInfo.bucketName);
     }
 
-    async asyncUploadFile(filePath) {
+    async asyncUploadFile(file) {
         try{
-            if(!filePath) {
+            if(!file) {
                 throw new Error('File does not exist');
             }
             
@@ -31,21 +30,21 @@ class asyncUploadService {
             return new Promise((resolve, reject) => {
                 //Success deliver the message
                 blobStreamWrite.on('finish', () =>{
-                    resolve('File ')
+                    resolve('File Upload successfully')
                 });
 
                 //Catch error
                 blobStreamWrite.on('error', (error) => {
                     reject(error);
                 });
+
+                //Wait for complete
+                blobStreamWrite.end(file.buffer)
             });
-            
-            //Wait for complete
-            blobStreamWrite.end(file.buffer);
         }catch (error){
             throw error;
         }
     }
 }
 
-module.exports = UploadService;
+module.exports = UploadService(;
