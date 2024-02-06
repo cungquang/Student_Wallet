@@ -24,7 +24,7 @@ class UploadService {
             keyFilename: this.config.googleCloudInfo.credentialFilePath
         });
 
-        this.bucket = BlobStorage.bucket(this.config.googleCloudInfo.bucketName);
+        this.bucket = this.BlobStorage.bucket(this.config.googleCloudInfo.bucketName);
     }
 
     //Upload the file to Google bucket

@@ -12,17 +12,30 @@ class UploadRouter{
     }
 
     configureUploadRoute(){
+        
+        //Route: /api/upload
         //in multerUpload.single(must specify the field name in html use to keep the file)
         router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
             try {
-              await this.uploadController.asyncUploadFile(request, response);
+                await this.uploadController.asyncUploadFile(request, response);
             } catch (error) {
-              console.error('Error handling file upload: ', error);
-              response.status(500).json({ error: 'Internal Server Error' });
+                console.error('Error handling file upload: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
             }
-          });
+        });
         
-          return router;
+        
+        //Route: /getsignedurl
+        router.get("/getsignedurl", async(request, response) => {
+            try{
+                await this.uploadController.asyncGetSignedUrl(request, response);
+            }catch(error){
+                console.error('Error handling file upload: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        })
+        
+        return router;
     }
 }
 

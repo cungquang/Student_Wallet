@@ -1,16 +1,32 @@
+const FinanceService = {
+  database: "FinanceDB",
+  TransactionCollection: "TransactionRecord",
+};
+const UploadService = { 
+  database: "UploadImageDB",
+  ImageCollection: "Image"
+};
+
+const mongoDbUri_dev = "mongodb://34.130.86.92:27017/";
+const mongoDbUri_prod = "mongodb://10.188.0.2:27017/";
+
 class Configs {
-    constructor() {
-      this.connectionString = [
-        { mongoDbUri_dev: "mongodb://34.130.86.92:27017/" },
-        { mongoDbUri_prod: "mongodb://10.188.0.2:27017/"}
-      ];
+    constructor(environment) {
+      //Database information
+      this.databaseInfo = {
+        connectionString: environment == 'Production' ? mongoDbUri_prod : mongoDbUri_dev,
+        FinanceService: FinanceService,
+        UploadService: UploadService,
+      }
+
+      //Google cloud information
       this.googleCloudInfo = {
         projectId: "hongquangcung301417603",
         bucketName: "upload-bucket-storage",
         credentialFilePath: "./src/configs/cmpt372-finalproject-e057d0261c50.json"
-      }
+      };
     }
-  }
+}
 
 
-module.exports = new Configs();
+module.exports = Configs;
