@@ -1,7 +1,7 @@
 class uploadController {
     constructor(uploadService, uploadMetadataService) {
-        this.uploadService = uploadService,
-        this.uploadMetadataService = uploadMetadataService
+        this.uploadService = uploadService;
+        this.uploadMetadataService = uploadMetadataService;
     }
 
     async asyncUploadFile(request, response) {
