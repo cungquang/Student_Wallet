@@ -9,19 +9,18 @@ class uploadController {
             //Upload the file
             const objectId = await this.uploadService.asyncUploadObject(request.file);
 
-            //Get object metadata
+            //Get object metadata + Signed url - for processing data
             const metadata = await this.uploadService.asyncGetObjectMetadata(objectId);
+            const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
             
             //Store data into database
-
-            //Signed url - for processing data
-            const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
-
-            //Call Financial Service for processing data
-
+           
 
             //Response
-            response.status(200).send(JSON.stringify(metadata));
+            response.status(200).send(JSON.stringify({
+                objectName: objectId,
+                signedUrl: signedUrl
+            }));
         }catch(error){
             throw(error);
         }
