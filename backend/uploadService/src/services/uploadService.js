@@ -47,4 +47,4 @@ class UploadService {
     }
 }
 
-module.exports = UploadService(;
+module.exports = UploadService;
