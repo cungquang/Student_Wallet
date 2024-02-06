@@ -1,20 +1,25 @@
 class uploadController {
-    constructor(uploadService, uploadMetadataService) {
+    constructor(uploadService, metadataService) {
         this.uploadService = uploadService;
-        this.uploadMetadataService = uploadMetadataService;
+        this.metadataService = metadataService;
     }
 
     async asyncUploadFile(request, response) {
         try {
             //Upload the file
-            const objectName = await this.uploadService.asyncUploadObject(request.file);
-            console.log(objectName);
+            const objectId = await this.uploadService.asyncUploadObject(request.file);
 
             //Get object metadata
-            const metadata = await this.uploadService.asyncGetObjectMetadata(objectName);
-
-            //Store data into database
+            const metadata = await this.uploadService.asyncGetObjectMetadata(objectId);
             
+            //Store data into database
+
+            //Signed url - for processing data
+            const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
+
+            //Call Financial Service for processing data
+
+
             //Response
             response.status(200).send(JSON.stringify(metadata));
         }catch(error){
@@ -25,7 +30,7 @@ class uploadController {
     async asyncGetSignedUrl(request, response) {
         try {
             const objectName = request.query.objectName;
-            const signedUrl = await this.uploadController.asyncSignedUrl(objectName)
+            const signedUrl = await this.uploadService.asyncSignedUrl(objectName)
 
             //Response
             response.status(200).send(signedUrl);

@@ -1,9 +1,20 @@
 const { MongoClient } = require('mongodb');
 
+/*
+ImageCollection schema:
+{
+    userId
+    imagineID - string
+    createdDate
+    lastModified
+    originalName
+}
+*/
+
 class metadataService {
     constructor(config){
         this.config = config;
-        this.uploadService = this.config.databaseInfo.uploadService;
+        this.uploadService = this.config.databaseInfo.UploadService;
         this.connectionString = `${this.config.databaseInfo.connectionString}${this.uploadService.database}`;
     }
     
@@ -25,7 +36,7 @@ class metadataService {
         try {
             dbClient = await this.asyncCreateConnection();
             const collection = dbClient.collection(this.uploadService.ImageCollection);
-            const result = await collection.insertOne(data);
+            await collection.insertOne(data);
         } catch(error){
             throw(error);
         }finally{
