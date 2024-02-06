@@ -1,37 +1,46 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-auth.js";
+const express = require('express');
+const { initializeApp } = require("firebase/app");
+const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = require("firebase/auth");
+const bodyParser = require('body-parser');
 
+const cors = require('cors');
+const app = express();
 const firebaseConfig = {
-    apiKey: "AIzaSyDI26Bw2RZkbNJp-U77lA3v_fX_Wou_hWQ",
-    authDomain: "jooeunpark301414492.firebaseapp.com",
-    projectId: "jooeunpark301414492",
-    storageBucket: "jooeunpark301414492.appspot.com",
-    messagingSenderId: "119117724944",
-    appId: "1:119117724944:web:b7d3637b1b0199b8e73995"
-  };
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  apiKey: "AIzaSyDI26Bw2RZkbNJp-U77lA3v_fX_Wou_hWQ",
+  authDomain: "jooeunpark301414492.firebaseapp.com",
+  projectId: "jooeunpark301414492",
+  storageBucket: "jooeunpark301414492.appspot.com",
+  messagingSenderId: "119117724944",
+  appId: "1:119117724944:web:b7d3637b1b0199b8e73995"
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById("message").innerHTML = "Welcome, " + user.email;
-        } else {
-            document.getElementById("message").innerHTML = "No user signed in.";
-        }
-    });
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+app.use(cors());
+app.use(bodyParser.json());
 
-    const btn = document.getElementById("btn");
-    btn.addEventListener("click", signIn);
+app.post('/signin', async (req, res) => {
+  try {
+      const { email, password } = req.body;
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      res.json({ message: "Login successful", user });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
 });
 
-function signIn() {
-    const email = document.getElementById("email").value;
-    console.log("Captured Email:", email);
+app.post('/signup', async (req, res) => {
+  try {
+      const { email, password } = req.body;
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      res.json({ message: "Signup successful", user });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+});
 
-    const password = document.getElementById("password").value;
-    signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
-            document.getElementById("message").innerHTML = error.message;
-        });
-}
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
