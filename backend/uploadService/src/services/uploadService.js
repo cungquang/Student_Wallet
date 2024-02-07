@@ -1,14 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 const utils = require('../utils/utils');
 
-/*
-const configs = require('../configs/configs');
-const BlobStorage = new Storage({
-    projectId: configs.googleCloudInfo.projectId,
-    keyFilename: configs.googleCloudInfo.credentialFilePath
-});
-*/
-
 const optionSignedUrl = {
     version: 'v4',                          //use v4 signing algorithm
     action: 'read',                         //specify action

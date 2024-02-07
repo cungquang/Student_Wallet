@@ -1,54 +1,66 @@
 const { MongoClient } = require('mongodb');
 
-/*
-ImageCollection schema:
-{
-    userId
-    imagineID - string
-    createdDate
-    lastModified
-    originalName
-}
-*/
-
 class UploadFileDbService {
     constructor(config){
+        //Check if not initiate
+        if (UploadFileDbService.instance){
+            return UploadFileDbService.instance;
+        }
+        
         this.config = config;
         this.uploadService = this.config.databaseInfo.UploadService;
         this.connectionString = `${this.config.databaseInfo.connectionString}${this.uploadService.database}`;
+        this.client = null;
+
+        //Singleton design pattern -> force the class: ensure this is the only instance of the class through entire application 
+        // In case use create another class -> this force to only have 1 instance
+        UploadFileDbService.instance = this; 
     }
     
-    async asyncCreateConnection() {
-        //Setup connection
-        try{
-            const client = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-            console.log(`Successfully connect to ${this.uploadService.database}`);
+    async asyncConnect() {
+        if (!this.client) {
+            try {
+                this.client = await MongoClient.connect(this.connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+                console.log(`Connected to database: ${this.uploadService.database}`);
+            } catch (error) {
+                console.error(`Fail to connect to database: ${this.uploadService.database}`, error);
+                throw error;
+            }
+        }
+        return this.client;
+    }
 
-            return client;
-        } catch(error){
-            console.log(`Fail to connect to ${this.uploadService.database}`);
-            throw(error);
+    asyncDisconnect() {
+        if(this.client){
+            try{
+                this.client.close();
+                console.log('Database connection closed');
+            } catch(error) {
+                console.log('Error in closing database')
+                throw(error);
+            } finally{
+                this.client = null;
+            }
         }
     }
 
     async asyncInsertRecord(record) {
-        let dbClient;
         try {
-            dbClient = await this.asyncCreateConnection();
-            const collection = dbClient.collection(this.uploadService.ImageCollection);
+            const collection = this.client.collection(this.uploadService.ImageCollection);
             await collection.insertOne(record);
         } catch(error){
             throw(error);
-        }finally{
-            if(dbClient){
-                dbClient.close();
-            }
-            console.log('Connection successfully close');
         }
     }
 
-    async asyncReadRecord(){
+    async asyncReadRecordById(userId){
+        try{
+            const collection = this.client.collection(this.uploadService.ImageCollection);
+            const records = await collection.find(userId).toArray();
+            return records;
+        } catch(error){
 
+        }
     }
 
     async asyncUpdateRecord() {

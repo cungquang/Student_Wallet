@@ -15,7 +15,7 @@ class UploadRouter{
         
         //Route: /upload
         //in multerUpload.single(must specify the field name in html use to keep the file)
-        router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
+        router.post("/uploadfile", multerUpload.single("fileInput"), async (request, response) => {
             try {
                 await this.uploadController.asyncUploadFile(request, response);
             } catch (error) {
@@ -47,7 +47,7 @@ class UploadRouter{
 
 
         //Route: /deleteobject
-        router.delete("/deleteobject", async(request, response) => {
+        router.delete("/deletefile", async(request, response) => {
             try{
                 await this.uploadController.asyncDeleteObject(request, response);
             } catch(error){
