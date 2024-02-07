@@ -88,6 +88,7 @@ class UploadService {
 
     async asyncDelete(objectName) {
         try {
+            //Need to verify before delete
             await this.bucket.file(objectName).delete(optionDelete);
             return 'Success';
         } catch(error) {

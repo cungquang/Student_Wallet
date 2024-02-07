@@ -47,7 +47,7 @@ class UploadRouter{
 
 
         //Route: /deleteobject
-        router.get("/deleteobject", async(request, response) => {
+        router.delete("/deleteobject", async(request, response) => {
             try{
                 await this.uploadController.asyncDeleteObject(request, response);
             } catch(error){
