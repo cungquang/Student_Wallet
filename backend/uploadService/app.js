@@ -34,20 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
 
-// Close database connection on 'SIGINT' signal
-// Create an event to list to 'SIGINT' -> 'SIGINT' get changed -> execute  
-process.on('SIGINT', () => {
-    console.log('Terminating server...');
-    try {
-        // Wait for asynchronous disconnection to complete
-        uploadFileDbService.asyncDisconnect();
-        process.exit(0);
-    } catch (error) {
-        console.error('Error closing database connection:', error);
-        process.exit(1);
-    }
-});
-
 // Static page - for testing
 app.get('/', (request, response) => {
     response.sendFile(__dirname + '/index.html');

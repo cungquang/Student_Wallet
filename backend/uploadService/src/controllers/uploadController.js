@@ -11,9 +11,6 @@ class uploadController {
             //Get object metadata + Signed url - for processing data
             const metadata = await this.uploadService.asyncGetObjectMetadata(objectId);
             const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
-            
-            //Store data into database
-            
 
             //Response
             response.status(200).send(JSON.stringify({
