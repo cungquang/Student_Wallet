@@ -40,8 +40,8 @@ app.get('/', (request, response) => {
 });
 
 // API routes
-app.use("/api", uploadRouter.configureUploadRoute());
-app.use("/db", uploadFileDbRouter.configureUploadFileDbRoute());
+app.use("/api/file", uploadRouter.configureUploadRoute());
+app.use("/api/db", uploadFileDbRouter.configureUploadFileDbRoute());
 
 
 // Start the server
