@@ -88,16 +88,18 @@ const ViewChange = styled.div`
 const LoginView: React.FC = () => {
     const [isIDValid, setIsIDValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
-
-    const [email, setEmail] = useState(''); // Initialize email state
-    const [password, setPassword] = useState(''); // Initialize password state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [uid, setUid] = useState('');
 
     const handleSignIn = async () => {
         try {
             const response = await axios.post('http://localhost:3000/signin', { email, password });
             setMessage(response.data.message); 
+            setUid(response.data.user.uid);
             setIsLogin(true);
+            
         } catch (error:any) {
             setMessage(error.response.data.error);
         }
@@ -108,6 +110,8 @@ const LoginView: React.FC = () => {
             const response = await axios.post('http://localhost:3000/signup', { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
+                const { uid } = response.data.user.uid;
+                setUid(uid);
             } else {
                 setMessage('Error: Unexpected response format');
             }
@@ -139,7 +143,9 @@ const LoginView: React.FC = () => {
                 <TextField type="text" placeholder="ID" value={email} onChange={handleEmailChange} />
                 <TextField type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                 <InvalidText isVisible={!isIDValid}>Invalid ID</InvalidText>
-                <LoginButton onClick={isLogin? handleSignUp:handleSignIn}>{isLogin ? 'Sign Up' : 'Log In'}</LoginButton>
+                <LoginButton onClick={isLogin ? handleSignUp : handleSignIn}>
+                    {isLogin ? 'Sign Up' : 'Log In'}
+                </LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
                 <LoginButton>
                     {isLogin ? 'Sign Up With Google' : 'Log In With Google'}
@@ -153,7 +159,8 @@ const LoginView: React.FC = () => {
                         {isLogin ? 'Log in' : 'Sign up'}
                     </ViewButton>
                 </ViewChange>
-                    <p>{message}</p>
+                <p>{message}</p>
+                <p>UID: {uid}</p>
             </Wrapper>
         </div>
     );
