@@ -38,6 +38,10 @@ app.get('/user/all', getAllUsers);
 // GET: Get user by UID
 app.get(`/user/:uid`, getUserByUID);
 
+/// NOT IMPLEMENTED YET (DELETE / EDIT)
+//app.delete('/user/:uid/delete', deleteUser);
+//app.delete('/user/:uid/edit', editUser);
+
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
@@ -84,7 +88,7 @@ async function getAllUsers(req, res) {
 async function getUserByUID(req, res) {
   try {
     const uid = req.params.uid;
-    const userRecord = await admin.auth().getUser(auth, uid);
+    const userRecord = await admin.auth().getUser(uid);
     res.json(userRecord.toJSON());
   } catch (error) {
     res.status(500).json({ error: error.message });

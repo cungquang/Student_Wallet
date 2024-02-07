@@ -94,10 +94,13 @@ const LoginView: React.FC = () => {
     const [uid, setUid] = useState('');
 
     const handleSignIn = async () => {
+
         try {
             const response = await axios.post('http://localhost:3000/signin', { email, password });
-            setMessage(response.data.message); 
             setUid(response.data.user.uid);
+            
+            const user = await axios.get(`http://localhost:3000/user/${uid}`)
+            setMessage(`Hello ${user.data.email}`); 
             setIsLogin(true);
             
         } catch (error:any) {
@@ -160,7 +163,6 @@ const LoginView: React.FC = () => {
                     </ViewButton>
                 </ViewChange>
                 <p>{message}</p>
-                <p>UID: {uid}</p>
             </Wrapper>
         </div>
     );
