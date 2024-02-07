@@ -5,6 +5,7 @@ const UploadService = require('./src/services/uploadService');
 const UploadController = require('./src/controllers/uploadController');
 const UploadRouter = require('./src/routes/uploadRoutes');
 
+// get environment variable
 const PORT = process.env.PORT || 5000;
 const ENVIRONMENT = process.env.ENVIRONMENT || 'Development';
 
