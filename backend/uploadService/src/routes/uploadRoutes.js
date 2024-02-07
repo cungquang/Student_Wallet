@@ -12,10 +12,9 @@ class UploadRouter{
     }
 
     configureUploadRoute(){
-        
         //Route: /upload
         //in multerUpload.single(must specify the field name in html use to keep the file)
-        router.post("/uploadfile", multerUpload.single("fileInput"), async (request, response) => {
+        router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
             try {
                 await this.uploadController.asyncUploadFile(request, response);
             } catch (error) {

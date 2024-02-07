@@ -4,16 +4,16 @@ const express = require("express");
 const router = express.Router();
 
 class UploadFileDbRoutes{
-    constructor(uploadFileDbService) {
-        this.uploadFileDbService = uploadFileDbService;
+    constructor(uploadFileDbController) {
+        this.uploadFileDbController = uploadFileDbController;
     }
 
     configureUploadFileDbRoute() {
-        router.post("/insert", async(request, response) => {
+        router.post("/insertRecord", async(request, response) => {
             try {
-                await this.uploadFileDbService.asyncInsertRecord(request, response);
+                this.uploadFileDbController.asyncInsertRecord(request, response);
             } catch(error) {
-                console.error('Error handling file upload: ', error);
+                console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
             }
         });
