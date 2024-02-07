@@ -11,7 +11,7 @@ ImageCollection schema:
 }
 */
 
-class metadataService {
+class UploadFileDbService {
     constructor(config){
         this.config = config;
         this.uploadService = this.config.databaseInfo.UploadService;
@@ -36,7 +36,7 @@ class metadataService {
         try {
             dbClient = await this.asyncCreateConnection();
             const collection = dbClient.collection(this.uploadService.ImageCollection);
-            await collection.insertOne(data);
+            await collection.insertOne(record);
         } catch(error){
             throw(error);
         }finally{
@@ -61,4 +61,4 @@ class metadataService {
 }
 
 
-module.exports = metadataService;
+module.exports = UploadFileDbService;

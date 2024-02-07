@@ -15,6 +15,10 @@ const optionSignedUrl = {
     expires: Date.now() + 15*60*1000        //set limit time access - 15 minutes
 };
 
+const optionDelete = {
+    storageClass: 'STANDARD'
+}
+
 
 class UploadService {
     constructor(config) {
@@ -36,7 +40,7 @@ class UploadService {
 
             const subpart = file.originalname.split('.')
 
-            //Initate the blob
+            //Initiate the blob
             const blobInstance = this.bucket.file(`${utils.generateUuid()}.${subpart[subpart.length - 1] }`);
             
             //Create a stream for writing
@@ -80,6 +84,16 @@ class UploadService {
     async asyncSignedUrl(objectName){
         const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
         return signedUri[0];
+    }
+
+    async asyncDelete(objectName) {
+        try {
+            await this.bucket.file(objectName).delete(optionDelete);
+            return 'Success';
+        } catch(error) {
+            throw(error);
+        }
+        
     }
 }
 

@@ -13,7 +13,7 @@ class UploadRouter{
 
     configureUploadRoute(){
         
-        //Route: /api/upload
+        //Route: /upload
         //in multerUpload.single(must specify the field name in html use to keep the file)
         router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
             try {
@@ -35,6 +35,27 @@ class UploadRouter{
             }
         })
         
+        //Route: /getmetadata
+        router.get("/getmetadata", async(request, response) => {
+            try{
+                await this.uploadController.asyncGetMetadata(request, response);
+            } catch(error){
+                console.error('Error handling file upload: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        })
+
+
+        //Route: /deleteobject
+        router.get("/deleteobject", async(request, response) => {
+            try{
+                await this.uploadController.asyncDeleteObject(request, response);
+            } catch(error){
+                console.error('Error handling file upload: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
         return router;
     }
 }

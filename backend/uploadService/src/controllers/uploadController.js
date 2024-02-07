@@ -14,7 +14,7 @@ class uploadController {
             const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
             
             //Store data into database
-           
+            
 
             //Response
             response.status(200).send(JSON.stringify({
@@ -36,7 +36,33 @@ class uploadController {
         } catch (error) {
             throw(error);
         }
-      }
+    }
+
+
+    async asyncGetMetadata(request, response) {
+        try{
+            const objectName = request.query.objectName;
+            const metadata = await this.uploadService.asyncGetObjectMetadata(objectName);
+
+            //Response
+            response.status(200).send(JSON.stringify(metadata));
+        } catch(error){
+            throw(error);
+        }
+    }
+
+    async asyncDeleteObject(request, response) {
+        try{
+            const objectName = request.query.objectName;
+            const deleteResponse = await this.uploadService.asyncDelete(objectName);
+
+            response.status(200).send(JSON.stringify({
+                operationStatus: deleteResponse
+            }));
+        } catch(error){
+            throw(error);
+        }
+    }
 }
 
 module.exports = uploadController;
