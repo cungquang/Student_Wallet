@@ -98,12 +98,29 @@ const LoginView: React.FC = () => {
         try {
             const response = await axios.post('http://localhost:3000/signin', { email, password });
             setUid(response.data.user.uid);
-            
+            console.log(`UID: ${uid}`);
+            const accessToken = response.data.idToken;
+
+            try {
+                const response = await axios.post('http://localhost:3000/decode-token', { accessToken:accessToken});
+                console.log('Decoded token:', response.data.decodedToken);
+            } catch (error) {
+                console.error('Error decoding token:', error);
+            }
+
+            const verificationResponse = await axios.get('http://localhost:3000/check-user', {
+                headers: {
+                    authorization: `Bearer ${accessToken}`
+                }
+            });
+            console.log(verificationResponse);
+
             const user = await axios.get(`http://localhost:3000/user/${uid}`)
-            setMessage(`Hello ${user.data.email}`); 
+            setMessage(`Hello ${user.data.email}`);
             setIsLogin(true);
-            
-        } catch (error:any) {
+
+
+        } catch (error: any) {
             setMessage(error.response.data.error);
         }
     };
@@ -113,12 +130,19 @@ const LoginView: React.FC = () => {
             const response = await axios.post('http://localhost:3000/signup', { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
-                const { uid } = response.data.user.uid;
+                const { uid, idToken } = response.data.user;
                 setUid(uid);
+
+                const userResponse = await axios.get(`http://localhost:3000/user/${uid}`, {
+                    headers: {
+                        authorization: `Bearer ${idToken}`
+                    }
+                });
+                setMessage(`Hello ${userResponse.data.email}`);
             } else {
                 setMessage('Error: Unexpected response format');
             }
-        } catch (error:any) {
+        } catch (error: any) {
             if (error.response && error.response.data && error.response.data.error) {
                 setMessage(error.response.data.error);
             } else {
@@ -126,7 +150,8 @@ const LoginView: React.FC = () => {
             }
         }
     };
-    
+
+
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     };
@@ -136,13 +161,13 @@ const LoginView: React.FC = () => {
     };
 
     const toggleView = () => {
-        setIsLogin(!isLogin); 
+        setIsLogin(!isLogin);
     };
 
     return (
         <div>
             <Wrapper>
-                <Heading>UniKeep</Heading> 
+                <Heading>UniKeep</Heading>
                 <TextField type="text" placeholder="ID" value={email} onChange={handleEmailChange} />
                 <TextField type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                 <InvalidText isVisible={!isIDValid}>Invalid ID</InvalidText>
@@ -153,7 +178,7 @@ const LoginView: React.FC = () => {
                 <LoginButton>
                     {isLogin ? 'Sign Up With Google' : 'Log In With Google'}
                 </LoginButton>
-                <Line/>
+                <Line />
                 <ViewChange>
                     <ViewText>
                         {isLogin ? 'Already have an account?' : "Don't have an account?"}
