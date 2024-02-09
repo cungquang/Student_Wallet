@@ -87,6 +87,7 @@ const ViewChange = styled.div`
 
 const LoginView: React.FC = () => {
     const [isIDValid, setIsIDValid] = useState(true);
+    const [iscredValid, setIsCredValid] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -94,7 +95,8 @@ const LoginView: React.FC = () => {
     const [uid, setUid] = useState('');
 
     const handleSignIn = async () => {
-
+        setIsIDValid(true);
+        setIsCredValid(true);
         try {
             const response = await axios.post('http://localhost:3000/signin', { email, password });
             setUid(response.data.user.uid);
@@ -118,14 +120,15 @@ const LoginView: React.FC = () => {
             const user = await axios.get(`http://localhost:3000/user/${uid}`)
             setMessage(`Hello ${user.data.email}`);
             setIsLogin(true);
-
-
+            setIsCredValid(true);
         } catch (error: any) {
             setMessage(error.response.data.error);
+            setIsCredValid(false);
         }
     };
 
     const handleSignUp = async () => {
+        setIsIDValid(true);
         try {
             const response = await axios.post('http://localhost:3000/signup', { email, password });
             if (response && response.data) {
@@ -145,6 +148,7 @@ const LoginView: React.FC = () => {
         } catch (error: any) {
             if (error.response && error.response.data && error.response.data.error) {
                 setMessage(error.response.data.error);
+                setIsIDValid(false);
             } else {
                 setMessage('Error: Unable to sign up');
             }
@@ -162,6 +166,8 @@ const LoginView: React.FC = () => {
 
     const toggleView = () => {
         setIsLogin(!isLogin);
+        setIsIDValid(true);
+        setIsCredValid(true);
     };
 
     return (
@@ -170,21 +176,23 @@ const LoginView: React.FC = () => {
                 <Heading>UniKeep</Heading>
                 <TextField type="text" placeholder="ID" value={email} onChange={handleEmailChange} />
                 <TextField type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
-                <InvalidText isVisible={!isIDValid}>Invalid ID</InvalidText>
-                <LoginButton onClick={isLogin ? handleSignUp : handleSignIn}>
-                    {isLogin ? 'Sign Up' : 'Log In'}
+                <InvalidText isVisible={!isIDValid || !iscredValid}>
+                    {isLogin ? 'Invalid credentials. Please try again.' : 'ID already in use. Please try another ID'}
+                </InvalidText>
+                <LoginButton onClick={isLogin ? handleSignIn : handleSignUp}>
+                    {isLogin ? 'Log In' : 'Sign Up'}
                 </LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
                 <LoginButton>
-                    {isLogin ? 'Sign Up With Google' : 'Log In With Google'}
+                    {isLogin ?  'Log In With Google' :'Sign Up With Google'}
                 </LoginButton>
                 <Line />
                 <ViewChange>
                     <ViewText>
-                        {isLogin ? 'Already have an account?' : "Don't have an account?"}
+                        {isLogin ? "Don't have an account?" : 'Already have an account?'}
                     </ViewText>
                     <ViewButton onClick={toggleView}>
-                        {isLogin ? 'Log in' : 'Sign up'}
+                        {isLogin ? 'Sign up' : 'Log in'}
                     </ViewButton>
                 </ViewChange>
                 <p>{message}</p>
