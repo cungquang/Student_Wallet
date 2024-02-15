@@ -1,8 +1,9 @@
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const path = require('path');
 const Configs = require('./src/configs/configs');
-const UploadFileDbService = require('./src/services/uploadFileDbService');
+const UploadFileRepository = require('./src/repositories/uploadFileRepository');
 const UploadService = require('./src/services/uploadService');
 const UploadController = require('./src/controllers/uploadController');
 const UploadFileDbController = require('./src/controllers/uploadFileDbController');
@@ -10,16 +11,38 @@ const UploadRouter = require('./src/routes/uploadRoutes');
 const UploadFileDbRouter = require('./src/routes/uploadFileDbRoutes');
 
 // Get environment variables & setup config
+require('dotenv').config();
 const { PORT = 5000, ENVIRONMENT = 'Development' } = process.env;
 const config = new Configs(ENVIRONMENT);
 
-// Initiate Database Connection
-const uploadFileDbService = new UploadFileDbService(config);
+//Dependency injection 
+const database = new DatabaseService(config.connectionString);
+//Init
+(async () => {
+    await database.asyncConnect()}
+)();
 
-// Inject dependencies
+//Shutdown
+const gracefulShutdown = () => {
+    console.log('Closing database connection...');
+    database.asyncDisconnect()
+        .then(() => {
+            console.log('Database connection closed');
+            process.exit(0);
+        })
+        .catch(error => {
+            console.error('Error closing database connection:', error);
+            process.exit(1);
+        });
+}
+
+// Initiate dependency injection
+const uploadFileRepository = new UploadFileRepository(database.client);
 const uploadService = new UploadService(config);
+
+// Upload & UploadDbFile controller
 const uploadController = new UploadController(uploadService);
-const uploadFileDbController = new UploadFileDbController(uploadFileDbService);
+const uploadFileDbController = new UploadFileDbController(uploadFileRepository);
 
 // Router
 const uploadRouter = new UploadRouter(uploadController);
