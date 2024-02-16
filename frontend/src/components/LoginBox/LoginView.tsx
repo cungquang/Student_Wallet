@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -93,47 +93,87 @@ const LoginView: React.FC = () => {
     const [message, setMessage] = useState('');
     const [uid, setUid] = useState('');
 
-    const handleSignIn = async () => {
+    useEffect(() => {
+
+        //Retrieve access token from the localstorage
+        const storedToken = localStorage.getItem('accessToken');
+        if (storedToken) {
+            verifyToken(storedToken);
+        }
+    }, []);
+
+    //Verify token from existing access token
+    const verifyToken = async (accessToken: string) => {
 
         try {
-            const response = await axios.post('http://localhost:3000/signin', { email, password });
-            setUid(response.data.user.uid);
-            console.log(`UID: ${uid}`);
-            const accessToken = response.data.idToken;
-
-            try {
-                const response = await axios.post('http://localhost:3000/decode-token', { accessToken:accessToken});
-                console.log('Decoded token:', response.data.decodedToken);
-            } catch (error) {
-                console.error('Error decoding token:', error);
-            }
-
-            const verificationResponse = await axios.get('http://localhost:3000/check-user', {
+            const verifyRes = await axios.get('http://localhost:3001/check-user', {
                 headers: {
                     authorization: `Bearer ${accessToken}`
                 }
             });
-            console.log(verificationResponse);
+            
+            console.log("Verification response: ", verifyRes);
+            try {
+                const response = await axios.post('http://localhost:3001/decode-token', { accessToken: accessToken });
+                console.log('Decoded token:', response.data.decodedToken);
 
-            const user = await axios.get(`http://localhost:3000/user/${uid}`)
-            setMessage(`Hello ${user.data.email}`);
+                const userInfo = response.data.decodedToken;
+
+                setUid(userInfo.uid);
+                const userRes = await axios.get(`http://localhost:3001/check-user`,{
+                    headers: {
+                        authorization: `Bearer ${accessToken}`
+                    }
+                },
+                );
+                setMessage(`Hello ${userInfo.email} -- verifed`);
+
+            } catch (error) {
+                console.error('Error decoding token:', error);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying token: ', error);
+            setMessage('Error: Unable to verify token');
+        }
+    }
+
+    const handleSignIn = async () => {
+
+        try {
+            const response = await axios.post('http://localhost:3001/signin', { email, password });
+            
+            try {
+            const accessToken = response.data.idToken;
+            localStorage.setItem('accessToken', accessToken);
+            await verifyToken(accessToken);
+            
+            const user = await axios.get(`http://localhost:3001/user/${uid}`)
+            setMessage(`Hello ${user.data.email} -- userPage`);
             setIsLogin(true);
-
+            }
+            catch (error: any) {
+                setMessage(error.responser);
+                console.log(error);
+            }
+    
 
         } catch (error: any) {
-            setMessage(error.response.data.error);
+            setMessage("Invalid login");
+            console.log(error);
         }
+
     };
 
     const handleSignUp = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/signup', { email, password });
+            const response = await axios.post('http://localhost:3001/signup', { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
                 const { uid, idToken } = response.data.user;
                 setUid(uid);
 
-                const userResponse = await axios.get(`http://localhost:3000/user/${uid}`, {
+                const userResponse = await axios.get(`http://localhost:3001/user/${uid}`, {
                     headers: {
                         authorization: `Bearer ${idToken}`
                     }
