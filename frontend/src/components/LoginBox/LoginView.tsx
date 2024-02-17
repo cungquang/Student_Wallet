@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
     display: flex;
@@ -15,6 +17,35 @@ const Heading = styled.div`
 `;
 
 const TextField = styled.input`
+    font-size: 20px;
+    font-family: Inika;
+    border: 1px solid #b0b0b0;
+    width: 303px;
+    height: 52px;
+    border-radius: 10px;
+    margin: 3px 0; 
+    padding-left: 10px;
+    box-sizing: border-box;
+`;
+
+const PasswordWrapper = styled.div`
+    position: relative;
+`;
+
+const PasswordToggleButton = styled.button`
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    font-family: Inika;
+    font-size: 15px;
+    transform: translateY(-50%);
+    color: #b0b0b0;
+    background: none;
+    border: none;
+    cursor: pointer;
+`;
+
+const PasswordTextField = styled.input`
     font-size: 20px;
     font-family: Inika;
     border: 1px solid #b0b0b0;
@@ -42,11 +73,24 @@ const LoginButton = styled.button`
     }
 `;
 
-const InvalidText = styled.div<{ isVisible: boolean }>`
-    font-size: 15px;
+
+const InvalidWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 303px;
+    height: 25px;
+    margin: 0 0 5px 0;
+`;
+
+const InvalidText = styled.div<{ isVisible: boolean, }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
     font-family: Inika;
     color: red;
-    margin: 2px 0 5px 0;
+    height: 100%;
     visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
     opacity: ${(props) => (props.isVisible ? '1' : '0')};
     transition: visibility 0s, opacity 0.3s;
@@ -83,42 +127,189 @@ const ViewChange = styled.div`
     align-items: center;
     margin-bottom: 30px;
 `;
-
 const LoginView: React.FC = () => {
-    const [isIDValid, setIsIDValid] = useState(true);
-    const [isLogin, setIsLogin] = useState(true);
 
-    const toggleView = () => {
-        if (isLogin) {
-            setIsLogin((isLogin) => false);
-        }
-        else setIsLogin((isLogin) => true);
+    const navigate = useNavigate();
+
+    const [signupMSG, setSignupMSG] = useState(true);
+    const [isLogin, setIsLogin] = useState(true);
+    const [email, setEmail] = useState('');
+    const [iscredValid, setIsCredValid] = useState(false);
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('default message');
+    const [showPassword, setShowPassword] = useState(false);
+
+    const SwitchPage = (path: string) => {
+        navigate(path);
     };
 
+    useEffect(() => {
+
+        //Retrieve access token from the localstorage
+        const storedToken = localStorage.getItem('accessToken');
+        if (storedToken) {
+            verifyToken(storedToken);
+        }
+    }, []);
+
+    
+    const verifyToken = async (accessToken: string) => {
+        try {
+            const verifyRes = await axios.get('http://localhost:4000/check-user', {
+                headers: {
+                    authorization: `Bearer ${accessToken}`
+                }
+            });
+    
+            console.log("Verification response: ", verifyRes);
+            try {
+                const response = await axios.post('http://localhost:4000/decode-token', { accessToken: accessToken });
+    
+                const userInfo = response.data.decodedToken;
+    
+                const userRes = await axios.get(`http://localhost:4000/check-user`, {
+                    headers: {
+                        authorization: `Bearer ${accessToken}`
+                    }
+                });
+                setMessage(`Hello ${userInfo.email} -- verified`);
+                setIsLogin(true);
+                setIsCredValid(true);
+                SwitchPage('/selection');
+    
+            } catch (error) {
+                console.error('Error decoding token:', error);
+            }
+        }
+        catch (error:any) {
+            console.error('Error verifying token: ', error);
+            if (error.response.status === 401) {
+                // Token expired, redirect to login screen
+                navigate('/login');
+            } else {
+                setMessage('Error: Unable to verify token');
+            }
+        }
+    }
+    
+
+    const handleSignIn = async () => {
+        setSignupMSG(true);
+        try {
+            const response = await axios.post('http://localhost:4000/signin', { email, password });
+            console.log(`UID: ${response.data.user.uid}`); 
+    
+            // Do the second request after UID is obtained
+            const accessToken = response.data.idToken;
+            localStorage.setItem('accessToken', accessToken);
+            
+            verifyToken(accessToken);
+        } catch (error: any) {
+            setMessage(error.response.data.error);
+            setIsCredValid(false);
+        }
+    };
+
+    const handleSignUp = async () => {
+        setSignupMSG(true);
+        let Message = ''; // Initialize errorMessage variable
+        try {
+            const response = await axios.post('http://localhost:4000/signup', { email, password });
+            if (response && response.data) {
+                setMessage(response.data.message);
+                const { uid, idToken } = response.data.user;
+
+                const userResponse = await axios.get(`http://localhost:4000/user/${uid}`, {
+                    headers: {
+                        authorization: `Bearer ${idToken}`
+                    }
+                });
+                setMessage(`Hello ${userResponse.data.email}`);
+                Message = 'Sign up successful, you can log in now';
+                setSignupMSG(false);
+            } else {
+                Message = 'Unexpected response format';
+                setSignupMSG(false);
+            }
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.error) {
+                const errorResponse = error.response.data.error;
+                if (errorResponse.includes('already')) {
+                    Message = 'There is already an account with this email';
+                } else if (errorResponse.includes('password')) {
+                    Message = 'Password must be at least 6 characters';
+                } else {
+                    Message = 'Invalid email';
+                }
+                setSignupMSG(false);
+            } else {
+                Message = 'Unable to sign up';
+            }
+        }
+        
+        // Set the errorMessage to be displayed in InvalidText component
+        setMessage(Message);
+    };
+
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const toggleView = () => {
+        setIsLogin(!isLogin);
+        setSignupMSG(true);
+        setIsCredValid(true);
+    };
+
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword); // Toggle password visibility
+    };  
+    
     return (
         <div>
             <Wrapper>
-                <Heading>UniKeep</Heading> 
-                <TextField type="text" placeholder="ID" />
-                <TextField type="text" placeholder="Password" />
-                <InvalidText isVisible={!isIDValid}>Invalid ID</InvalidText>
-                <LoginButton>{isLogin ? 'Sign Up' : 'Log In'}</LoginButton>
+                <Heading>UniKeep</Heading>
+                <TextField type="text" placeholder="Email" value={email} onChange={handleEmailChange} />
+                <PasswordWrapper>
+                    <PasswordTextField 
+                        type={showPassword ? "text" : "password"} // Set the type based on showPassword state
+                        placeholder="Password" 
+                        value={password} 
+                        onChange={handlePasswordChange} 
+                    />
+                    <PasswordToggleButton onClick={handleTogglePassword}>
+                        {showPassword ? "Hide" : "Show"}
+                    </PasswordToggleButton>
+                </PasswordWrapper>
+                <InvalidWrapper>
+                    <InvalidText isVisible={!signupMSG || !iscredValid}>
+                        {isLogin ? 'Invalid credentials. Please try again' : message}
+                    </InvalidText>
+                </InvalidWrapper>
+                <LoginButton onClick={isLogin ? handleSignIn : handleSignUp}>
+                    {isLogin ? 'Log In' : 'Sign Up'}
+                </LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
                 <LoginButton>
-                    {isLogin ? 'Sign Up With Google' : 'Log In With Google'}
+                    {isLogin ?  'Log In With Google' :'Sign Up With Google'}
                 </LoginButton>
-                <Line/>
+                <Line />
                 <ViewChange>
                     <ViewText>
-                        {isLogin ? 'Already have an account?' : "Don't have an account?"}
+                        {isLogin ? "Don't have an account?" : 'Already have an account?'}
                     </ViewText>
                     <ViewButton onClick={toggleView}>
-                        {isLogin ? 'Log in' : 'Sign up'}
+                        {isLogin ? 'Sign up' : 'Log in'}
                     </ViewButton>
                 </ViewChange>
+                {/* <p>{message}</p> */}
             </Wrapper>
         </div>
     );
 };
-
 export default LoginView;
