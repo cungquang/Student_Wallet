@@ -44,7 +44,6 @@ class UploadService {
             return new Promise((resolve, reject) => {
                 //Success deliver the message
                 blobStreamWrite.on('finish', () =>{
-                    console.log(blobInstance.name);
                     resolve(blobInstance.name);
                 });
 
