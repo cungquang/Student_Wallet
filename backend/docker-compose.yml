@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  unikeep_uploadservice:
+    build:
+        context: ./uploadservice
+        dockerfile: Dockerfile
+    container_name: unikeep_uploadservice
+    image: cungquang1987/cmpt372:unikeep_uploadservice
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://mongoDB372:27017
+    depends_on:
+      - unikeep_mongodb
+
+  unikeep_mongodb:
+    container_name: mongoDB372
+    image: mongo:latest       # or specify a specific version like mongo:4.4
+    ports:
+      - "27017:27017"
+    #volume to store & keep data at server level
+    volumes:
+      - uploadserviceDb:/data/db
+    
+#define the volume
+volumes:
+  uploadserviceDb: {}

@@ -38,7 +38,7 @@ class Configs {
     constructor() {
       //Database information
       this.connectionString= process.env.MONGODB_URI;
-
+      
       //Google cloud information
       this.googleCloudInfo = {
         projectId: process.env.PROJECT_ID,
@@ -49,4 +49,4 @@ class Configs {
 }
 
 
-module.exports = Configs;
+module.exports = { ConnectionStringBuilder, Configs};

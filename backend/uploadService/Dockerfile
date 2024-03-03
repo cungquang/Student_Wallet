@@ -14,10 +14,10 @@ RUN npm install
 COPY . .
 
 # Make port 5001 available to the world outside this container
-EXPOSE 5001
+EXPOSE 3001
 
 # Make port available to the world outside this container
-ENV PORT=5001
+ENV PORT=3001
 ENV ENVIRONMENT=Production
 
 # Run the compiled JavaScript file when the container launches

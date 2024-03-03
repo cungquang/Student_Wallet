@@ -2,21 +2,25 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const path = require('path');
-const Configs = require('./src/configs/configs');
+const { ConnectionStringBuilder, Configs } = require('./src/configs/configs');
 const UploadFileRepository = require('./src/repositories/uploadFileRepository');
 const UploadService = require('./src/services/uploadService');
 const UploadController = require('./src/controllers/uploadController');
 const UploadFileDbController = require('./src/controllers/uploadFileDbController');
 const UploadRouter = require('./src/routes/uploadRoutes');
 const UploadFileDbRouter = require('./src/routes/uploadFileDbRoutes');
+const DatabaseService = require('./src/services/databaseService');
+const { config } = require('dotenv');
 
 // Get environment variables & setup config
 require('dotenv').config();
-const { PORT = 5000, ENVIRONMENT = 'Development' } = process.env;
-const config = new Configs(ENVIRONMENT);
+const PORT = process.env.PORT || 3000;
+const ENV = process.env.ENV || "Development";
+const configs = new Configs(ENV);
 
 //Dependency injection 
-const database = new DatabaseService(config.connectionString);
+const database = new DatabaseService(configs.connectionString);
+
 //Init
 (async () => {
     await database.asyncConnect()}
@@ -38,7 +42,7 @@ const gracefulShutdown = () => {
 
 // Initiate dependency injection
 const uploadFileRepository = new UploadFileRepository(database.client);
-const uploadService = new UploadService(config);
+const uploadService = new UploadService(configs);
 
 // Upload & UploadDbFile controller
 const uploadController = new UploadController(uploadService);
@@ -53,13 +57,13 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(helmet());
 
 // Static page - for testing
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/index.html');
+    response.sendFile(__dirname + '/static/index.html');
 });
 
 // API routes
