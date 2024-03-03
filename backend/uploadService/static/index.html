@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload Form</title>
+</head>
+<body>
+  <form action="/api/file/upload" method="post" enctype="multipart/form-data">
+    <label for="fileInput">Choose File:</label>
+    <input type="file" name="fileInput" id="fileInput" accept=".txt, .pdf, .docx">
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

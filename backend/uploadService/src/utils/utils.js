@@ -5,3 +5,5 @@ class utils{
         return uuidv4();
     }
 }
+
+module.exports = new utils();

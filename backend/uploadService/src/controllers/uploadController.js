@@ -1,29 +1,63 @@
 class uploadController {
-    constructor(uploadService, uploadMetadataService) {
-        this.uploadService = uploadService,
-        this.uploadMetadataService = uploadMetadataService
+    constructor(uploadService) {
+        this.uploadService = uploadService;
     }
 
     async asyncUploadFile(request, response) {
         try {
-            if (!request.file){
-                return response.status(400).send('Invalid request, no file uploaded.');
-            }
-            
             //Upload the file
-            const responseUrl = await this.uploadService.asyncUploadFile(request.fileUrl);
+            const objectId = await this.uploadService.asyncUploadObject(request.file);
 
-            //Store data into database
+            //Get object metadata + Signed url - for processing data
+            const metadata = await this.uploadService.asyncGetObjectMetadata(objectId);
+            const signedUrl = await this.uploadService.asyncSignedUrl(objectId);
 
-            response.status(200).send(responseUrl);
+            //Response
+            response.status(200).send(JSON.stringify({
+                objectName: objectId,
+                signedUrl: signedUrl
+            }));
         }catch(error){
-            console.error('Error uploading file: ', error);
-            response.status(500).json({ error: 'Internal Server Error'});
+            throw(error);
         }
     }
 
-    async asyncGetUploadFileURL(request, response) {
-        console.log('return an upload url');
+    async asyncGetSignedUrl(request, response) {
+        try {
+            const objectName = request.query.objectName;
+            const signedUrl = await this.uploadService.asyncSignedUrl(objectName)
+
+            //Response
+            response.status(200).send(signedUrl);
+        } catch (error) {
+            throw(error);
+        }
+    }
+
+
+    async asyncGetMetadata(request, response) {
+        try{
+            const objectName = request.query.objectName;
+            const metadata = await this.uploadService.asyncGetObjectMetadata(objectName);
+
+            //Response
+            response.status(200).send(JSON.stringify(metadata));
+        } catch(error){
+            throw(error);
+        }
+    }
+
+    async asyncDeleteObject(request, response) {
+        try{
+            const objectName = request.query.objectName;
+            const deleteResponse = await this.uploadService.asyncDelete(objectName);
+
+            response.status(200).send(JSON.stringify({
+                operationStatus: deleteResponse
+            }));
+        } catch(error){
+            throw(error);
+        }
     }
 }
 
