@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const path = require('path');
+const { config } = require('dotenv');
 const { ConnectionStringBuilder, Configs } = require('./src/configs/configs');
 const UploadFileRepository = require('./src/repositories/uploadFileRepository');
 const UploadService = require('./src/services/uploadService');
@@ -10,7 +11,7 @@ const UploadFileDbController = require('./src/controllers/uploadFileDbController
 const UploadRouter = require('./src/routes/uploadRoutes');
 const UploadFileDbRouter = require('./src/routes/uploadFileDbRoutes');
 const DatabaseService = require('./src/services/databaseService');
-const { config } = require('dotenv');
+
 
 // Get environment variables & setup config
 require('dotenv').config();
