@@ -47,7 +47,7 @@ class FinanceRoutes{
 
         router.get("/getReceiptRecordsByUserIdAndDate", async(request, response) => {
             try {
-                await this.financeController.asyncGetRecordsByUserIdAndDate(request, response);
+                await this.financeController.getReceiptRecordByUserIdAndDate(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
