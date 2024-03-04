@@ -3,6 +3,7 @@ class uploadController {
         this.uploadService = uploadService;
     }
 
+    //Function to upload file to blob storage
     async asyncUploadFile(request, response) {
         try {
             //Upload the file
@@ -22,6 +23,7 @@ class uploadController {
         }
     }
 
+    //Function to get signed URL -> for accessing
     async asyncGetSignedUrl(request, response) {
         try {
             const objectName = request.query.objectName;
@@ -34,7 +36,7 @@ class uploadController {
         }
     }
 
-
+    //Function to get metadata of the file (after upload)
     async asyncGetMetadata(request, response) {
         try{
             const objectName = request.query.objectName;
@@ -47,6 +49,7 @@ class uploadController {
         }
     }
 
+    //Function to delete the blob file
     async asyncDeleteObject(request, response) {
         try{
             const objectName = request.query.objectName;

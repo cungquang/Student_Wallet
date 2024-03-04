@@ -1,7 +1,7 @@
-DB_NAME = "UploadImageDB";
-COLLECTION_NAME = "Images";
+DB_NAME = "FinanceDB";
+COLLECTION_NAME = "ReceiptRecord";
 
-class UploadFileRepository {
+class FinanceRepository {
     constructor(client){
         this.client = client;
         this.collection = this.client.db(DB_NAME).collection(COLLECTION_NAME);
@@ -58,4 +58,4 @@ class UploadFileRepository {
 }
 
 
-module.exports = UploadFileRepository;
+module.exports = FinanceRepository;

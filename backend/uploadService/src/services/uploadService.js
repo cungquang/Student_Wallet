@@ -11,7 +11,6 @@ const optionDelete = {
     storageClass: 'STANDARD'
 }
 
-
 class UploadService {
     constructor(config) {
         this.config = config;
