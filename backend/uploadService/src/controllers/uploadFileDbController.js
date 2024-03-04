@@ -74,7 +74,7 @@ class UploadFileDbController {
     }
 
     //Function to read records by Id 
-    async asyncGetAllRecordsById(request, response) {
+    async asyncGetAllRecordsByUserId(request, response) {
         try {
             if(Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId")) {
                 response.status(400).send("Bad request.");
@@ -92,7 +92,7 @@ class UploadFileDbController {
     }
 
     //Function to read records by Id & Date range
-    async asyncGetRecordsByIdAndDate(request, response) {
+    async asyncGetRecordsByUserIdAndDate(request, response) {
         try{
             if(Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId")) {
                 response.status(400).send("Bad request.");

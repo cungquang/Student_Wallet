@@ -27,18 +27,18 @@ class UploadFileDbRoutes{
             }
         });
 
-        router.get("/getDistinctRecordsById", async(request, response) => {
+        router.get("/getAllRecordsByUserId", async(request, response) => {
             try {
-                await this.uploadFileDbController.asyncGetAllRecordsById(request, response);
+                await this.uploadFileDbController.asyncGetAllRecordsByUserId(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
             }
         });
 
-        router.get("/getRecordsByIdAndDate", async(request, response) => {
+        router.get("/getRecordsByUserIdAndDate", async(request, response) => {
             try {
-                await this.uploadFileDbController.asyncGetRecordsByIdAndDate(request, response);
+                await this.uploadFileDbController.asyncGetRecordsByUserIdAndDate(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });

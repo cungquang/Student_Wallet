@@ -11,7 +11,7 @@ class FinanceRoutes{
     configureFinanceRoutes() {
         router.post("/insertReceiptRecord", async(request, response) => {
             try {
-                await this.financeController.insertNewRecord(request, response);
+                await this.financeController.insertNewReceiptRecord(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
@@ -20,25 +20,43 @@ class FinanceRoutes{
 
         router.put("/updateReceiptRecord", async(request, response) => {
             try {
-                await this.financeController.updateRecordByIdAndObjectName(request, response);
+                await this.financeController.updateReceiptRecordByUserIdAndObjectName(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
             }
         });
 
-        router.get("/getReceiptRecordsByIdAndObjectName", async(request, response) => {
-            try {
-                await this.financeController.getRecordByIdAndObjectName(request, response);
+        router.get("/getReceiptRecordByUserId", async(request, response) => {
+            try{
+                await this.financeController.getReceiptRecordByUserId(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
             }
         });
 
-        router.get("/getReceiptRecordsByIdAndDate", async(request, response) => {
+        router.get("/getReceiptRecordsByUserIdAndObjectName", async(request, response) => {
             try {
-                await this.financeController.asyncGetRecordsByIdAndDate(request, response);
+                await this.financeController.getReceiptRecordByUserIdAndObjectName(request, response);
+            } catch(error) {
+                console.error('Error handling database: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
+        router.get("/getReceiptRecordsByUserIdAndDate", async(request, response) => {
+            try {
+                await this.financeController.asyncGetRecordsByUserIdAndDate(request, response);
+            } catch(error) {
+                console.error('Error handling database: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
+        router.delete("/deleteReceiptRecordsByUserIdAndObjectName", async(request, response) => {
+            try {
+                await this.financeController.deleteReceiptRecordByUserIdAndObjectName(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });
