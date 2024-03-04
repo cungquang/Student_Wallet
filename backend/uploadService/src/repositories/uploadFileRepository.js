@@ -1,32 +1,17 @@
-const { MongoClient } = require('mongodb');
-
-/*
-Document structure:
-{
-    _id:{
-        userId: uuid
-        objectName: uuid
-    }
-    createdDate: date
-    lastModified: date
-    originalName: string
-    isRead: bool
-    isReceipt: bool
-}
-*/
-
 DB_NAME = "UploadImageDB";
-COLLECTION_NAME = "Image";
+COLLECTION_NAME = "Images";
 
 class UploadFileRepository {
     constructor(client){
         this.client = client;
-        this.collection = this.client.db(DB_NAME).collection(this.collection);
+        this.collection = this.client.db(DB_NAME).collection(COLLECTION_NAME);
     }
 
+    //Function to insert new records
     async asyncInsertRecord(record) {
         try {
-            await this.collection.insertOne(record);
+            const result = await this.collection.insertOne(record);
+            return result;
         } catch(error){
             throw(error);
         }
@@ -34,13 +19,13 @@ class UploadFileRepository {
 
     async asyncDeleteRecord(recordId) {
         try {
-            const result = await this.collection.deleteOne(recordId);
-            return result;
+            return await this.collection.deleteOne(recordId);
         }catch(error) {
             throw(error);
         }
     }
 
+    //Function to update the content of record
     async asyncUpdateRecord(recordId, updatedData) {
         try {
             const result = await this.collection.updateOne(recordId, { $set: updatedData });
@@ -50,18 +35,22 @@ class UploadFileRepository {
         }
     }
     
-    async asyncReadRecordById(userId){
+    //Function to read/get record by conditions
+    async asyncReadRecordByCondition(filter){
         try{
-            const records = await this.collection.find(userId).toArray();
+            const records = await this.collection.find(filter).toArray();
             return records;
         } catch(error){
-
+            throw(error);
         }
     }
 
-    async asyncGetAllDistinctRecordId() {
+    //Function to verify resources exist
+    async asyncResourceExit(filter){
         try{
-            return await this.collection.distinct("_id");
+            const db = this.client.db(DB_NAME).collection(COLLECTION_NAME);
+            const count = await db.countDocuments(filter);
+            return count;
         } catch(error) {
             throw(error);
         }
