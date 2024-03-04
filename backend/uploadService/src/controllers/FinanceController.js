@@ -92,3 +92,5 @@ class FinanceController{
 
     //Function to read receipt record
 }
+
+module.exports = FinanceController;

@@ -8,7 +8,7 @@ class FinanceRoutes{
         this.financeController = financeController;
     }
 
-    configureUploadFileDbRoute() {
+    configureFinanceRoutes() {
         router.post("/insertReceiptRecord", async(request, response) => {
             try {
                 await this.financeController.insertNewRecord(request, response);
