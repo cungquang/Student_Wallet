@@ -34,8 +34,8 @@ class FinanceController{
                 receiptLine: body.receiptLine
             }
             
-            const result = this.financeRepository.asyncInsertRecord()
-            response.status(200).send(JSON.stringify());
+            await this.financeRepository.asyncInsertRecord(record)
+            response.status(200).send({complete: true});
 
         } catch(error){
             throw(error);

@@ -35,6 +35,7 @@ class UploadFileDbController {
                 isRead: body.isRead,
                 isReceipt: body.isReceipt
             }
+            
             await this.uploadFileRepository.asyncInsertRecord(record);
             response.status(200).send({complete: true});
         } catch(error) {
