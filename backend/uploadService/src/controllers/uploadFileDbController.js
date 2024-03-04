@@ -113,6 +113,24 @@ class UploadFileDbController {
             throw(error);
         }
     }
+
+    async asyncDeleteRecordByUserIdAndObjectName(request, response) {
+        try {
+            if(Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId") || !Object.keys(request.query).includes("objectName")) {
+                response.status(400).send("Bad request.");
+                return;
+            }
+
+            const recordId = {
+                userId: request.query.userId,
+                objectName: request.query.objectName
+            }
+            const result = await this.uploadFileRepository.asyncDeleteRecord(recordId);
+            response.status(200).send(JSON.stringify(result));
+        } catch(error) {
+            throw(error);
+        }
+    }
 }
 
 

@@ -45,6 +45,15 @@ class UploadFileDbRoutes{
             }
         });
 
+        router.delete("/deleteRecordsByUserIdAndObjectName", async(request, response) => {
+            try {
+                await this.uploadFileDbController.asyncDeleteRecordByUserIdAndObjectName(request, response);
+            } catch(error) {
+                console.error('Error handling database: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
         return router;
     }
 }

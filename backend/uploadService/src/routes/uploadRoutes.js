@@ -11,8 +11,9 @@ class UploadRouter{
         this.uploadController = uploadController
     }
 
+    //Handle routing for upload to blob
     configureUploadRoute(){
-        //Route: /upload
+
         //in multerUpload.single(must specify the field name in html use to keep the file)
         router.post("/upload", multerUpload.single("fileInput"), async (request, response) => {
             try {

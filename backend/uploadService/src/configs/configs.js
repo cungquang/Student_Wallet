@@ -38,6 +38,7 @@ class Configs {
     constructor() {
       //Database information
       this.connectionString= process.env.MONGODB_URI;
+      this.aiServiceUri = process.env.AISERVICE_URI;
       
       //Google cloud information
       this.googleCloudInfo = {

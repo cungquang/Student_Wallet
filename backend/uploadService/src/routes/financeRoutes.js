@@ -8,6 +8,7 @@ class FinanceRoutes{
         this.financeController = financeController;
     }
 
+    //Handle routing for finance api
     configureFinanceRoutes() {
         router.post("/insertReceiptRecord", async(request, response) => {
             try {
@@ -57,6 +58,15 @@ class FinanceRoutes{
         router.delete("/deleteReceiptRecordsByUserIdAndObjectName", async(request, response) => {
             try {
                 await this.financeController.deleteReceiptRecordByUserIdAndObjectName(request, response);
+            } catch(error) {
+                console.error('Error handling database: ', error);
+                response.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
+        router.delete("/readReceiptRecordByAi", async(request, response) => {
+            try {
+                await this.financeController.readReceiptRecordByAi(request, response);
             } catch(error) {
                 console.error('Error handling database: ', error);
                 response.status(500).json({ error: 'Internal Server Error' });

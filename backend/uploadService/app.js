@@ -14,7 +14,7 @@ const UploadRouter = require('./src/routes/uploadRoutes');
 const UploadFileDbRouter = require('./src/routes/uploadFileDbRoutes');
 const FinanceRoutes = require('./src/routes/financeRoutes');
 const DatabaseService = require('./src/services/databaseService');
-
+const AzureAIService = require('./src/services/azureAiService');
 
 // Get environment variables & setup config
 require('dotenv').config();
@@ -48,11 +48,12 @@ const gracefulShutdown = () => {
 const uploadFileRepository = new UploadFileRepository(database.client);
 const financeRepository = new FinanceRepository(database.client);
 const uploadService = new UploadService(configs);
+const azureAiService = new AzureAIService(configs.aiServiceUri);
 
 // Upload & UploadDbFile controller
 const uploadController = new UploadController(uploadService);
 const uploadFileDbController = new UploadFileDbController(uploadFileRepository);
-const financeController = new FinanceController(financeRepository);
+const financeController = new FinanceController(financeRepository, azureAiService);
 
 // Router
 const uploadRouter = new UploadRouter(uploadController);
@@ -75,7 +76,7 @@ app.get('/', (request, response) => {
 
 // API routes
 app.use("/api/file", uploadRouter.configureUploadRoute());
-app.use("/api/db", uploadFileDbRouter.configureUploadFileDbRoute());
+app.use("/api/fileMetadata", uploadFileDbRouter.configureUploadFileDbRoute());
 app.use("/api/finance", financeRouter.configureFinanceRoutes());
 
 
