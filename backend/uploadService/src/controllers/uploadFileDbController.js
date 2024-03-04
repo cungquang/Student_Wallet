@@ -46,25 +46,26 @@ class UploadFileDbController {
     //Function to update the record contents
     async asyncUpdateRecord(request, response) {
         try{
+            body = request.body
+
             //Missing query param
-            if (Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId") || !Object.keys(request.query).includes("objectName")) {
+            if (Object.keys(body).length === 0 || !Object.keys(body).includes("userId") || !Object.keys(body).includes("objectName")) {
                 response.status(400).send("Bad request.");
                 return;
             }
 
             //Unauthorized record OR non existence
-            if(await this.uploadFileRepository.asyncResourceExit( { userId: request.query.userId, objectName: request.query.objectName }) <= 0){
-                response.status(404).send("Bad request.");
+            if(await this.uploadFileRepository.asyncResourceExit( { userId: body.userId, objectName: body.objectName }) <= 0){
+                response.status(404).send("Unauthorized request.");
                 return;
             } 
 
             const filter = { 
-                userId: request.query.userId,
-                objectName: request.query.objectName
+                userId: body.userId,
+                objectName: body.objectName
             };
 
-            console.log(request.body);
-            const updatedData = request.body;
+            const updatedData = body.updatedData;
             const result = await this.uploadFileRepository.asyncUpdateRecord(filter, updatedData);
             response.status(200).send(JSON.stringify(result));
         } catch(error){

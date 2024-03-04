@@ -16,7 +16,7 @@ class FinanceController{
     }
 
     //Function to insert receipt record
-    async insertNewRecord(request, response){
+    async insertNewReceiptRecord(request, response){
         try{
             const body = request.body;
 
@@ -36,39 +36,51 @@ class FinanceController{
             
             await this.financeRepository.asyncInsertRecord(record)
             response.status(200).send({complete: true});
-
-        } catch(error){
+        } 
+        catch(error){
             throw(error);
         }
-
-
     }
 
     //Function to update receipt record
-    async updateRecordByIdAndObjectName(request, response) {
+    async updateReceiptRecordByIdAndObjectName(request, response) {
         try {
+            body = request.body
+
             //Missing query param
-            if (Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId") || !Object.keys(request.query).includes("objectName")) {
+            if (Object.keys(body).length === 0 || !Object.keys(body).includes("userId") || !Object.keys(body).includes("objectName")) {
                 response.status(400).send("Bad request.");
                 return;
             }
 
+            //Unauthorized record OR non existence
+            if(await this.uploadFileRepository.asyncResourceExit( { userId: body.userId, objectName: body.objectName }) <= 0){
+                response.status(404).send("Unauthorized request.");
+                return;
+            } 
 
-            response.status(200).send(JSON.stringify());
+            const filter = { 
+                userId: body.userId,
+                objectName: body.objectName
+            };
+
+            const updatedData = body.updatedData;
+            const result = await this.uploadFileRepository.asyncUpdateRecord(filter, updatedData);
+            response.status(200).send(JSON.stringify(result));
         } catch(error){
             throw(error);
         }
     }
 
-
     //Function to read receipt record
-    async getRecordByIdAndObjectName(request, response) {
+    async getReceiptRecordByIdAndObjectName(request, response) {
         try {
             //Missing query param
             if (Object.keys(request.query).length === 0 || !Object.keys(request.query).includes("userId") || !Object.keys(request.query).includes("objectName")) {
                 response.status(400).send("Bad request.");
                 return;
             }
+
 
             response.status(200).send(JSON.stringify());
         } catch(error) {
@@ -77,4 +89,6 @@ class FinanceController{
     }
 
     //Function to delete receipt record
+
+    //Function to read receipt record
 }
