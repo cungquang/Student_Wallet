@@ -8,7 +8,7 @@ import Footer from '../components/common/footer';
 const BudgetPage: React.FC = () => {
     return (
         <div>
-            <Header />
+            <Header/>
             <div className="BudgetPage">
                 <div className="BudgetDashboard">
                     <span>Dashboard</span>
@@ -18,7 +18,7 @@ const BudgetPage: React.FC = () => {
                     <FileUploadComponent/>
                 </div>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 };

@@ -18,7 +18,7 @@ const AzureAIService = require('./src/services/azureAiService');
 
 // Get environment variables & setup config
 require('dotenv').config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2024;
 const ENV = process.env.ENV || "Development";
 const configs = new Configs(ENV);
 

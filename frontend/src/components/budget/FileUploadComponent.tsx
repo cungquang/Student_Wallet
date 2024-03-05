@@ -25,16 +25,41 @@ const FileUploadComponent: React.FC = () => {
         formData.append('file', file);
 
         //Access local storage -> get "access token" -> 
+        const decodedToken = await axios.post('/decode-token');
+        const userId = decodedToken;
 
-
-        //Need to update Upload URL
-        const response = await axios.post('YOUR_UPLOAD_URL', formData, {
+        //Upload the file to blob
+        const response = await axios.post('http://localhost:2024/api/file/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
 
-        console.log('File uploaded successfully:', response.data);
+        //Retrieve information from response
+        const { objectName, signedUrl, createdDate, lastModified } = response.data;        
+
+        //Read data in the receipt
+        const receiptData = await axios.post('https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt', { RequestUrl: signedUrl });
+        
+        //Temporary store into local storage
+        localStorage.setItem('recent_receipt', JSON.stringify({
+          userId: userId,
+          objectName: objectName,
+          receiptData: receiptData.data
+        }));
+
+        //Write into the database:
+        const recordFile = {
+          userId: userId,
+          objectName: objectName,
+          createdDate: createdDate,
+          lastModified: lastModified,
+          isRead: true,
+          isReceipt: false
+        }
+        
+        //Post record of the uploaded file into database
+        await axios.post('http://localhost:2024/api/fileMetadata/insertRecord', recordFile);
 
         // Reset file state after successful upload
         setFile(null);

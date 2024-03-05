@@ -16,7 +16,9 @@ class uploadController {
             //Response
             response.status(200).send(JSON.stringify({
                 objectName: objectId,
-                signedUrl: signedUrl
+                signedUrl: signedUrl,
+                createdDate: metadata.createdDate,
+                lastModified: metadata.lastModified
             }));
         }catch(error){
             throw(error);
