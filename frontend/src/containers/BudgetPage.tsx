@@ -5,8 +5,15 @@ import LineChartComponent from '../components/budget/LineChartComponent';
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
 
-
 const BudgetPage: React.FC = () => {
+    //useState -> filter by period: current week, current month, current Year
+
+    //useState -> chartType
+
+    //Using useState => update the filter
+
+    //Collect data according to the state
+
     const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const data = [1, 2, 3, 5, 6, 8, 3, 1];
 
