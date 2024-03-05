@@ -5,6 +5,7 @@ import axios from 'axios';
 const FileUploadComponent: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [filePath, setFilePath] = useState<string>('');
+  const [uploadStatus, setUploadStatus] = useState<string>('');
 
   //Function handle use select file
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +25,7 @@ const FileUploadComponent: React.FC = () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        //Access local storage -> get "access token" -> 
+        //Access local storage -> get "access token"
         const decodedToken = await axios.post('/decode-token');
         const userId = decodedToken;
 
@@ -41,7 +42,7 @@ const FileUploadComponent: React.FC = () => {
         //Read data in the receipt
         const receiptData = await axios.post('https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt', { RequestUrl: signedUrl });
         
-        //Temporary store into local storage
+        //Temporary store into local storage => allow user to modify before writing into Finance database
         localStorage.setItem('recent_receipt', JSON.stringify({
           userId: userId,
           objectName: objectName,
@@ -59,7 +60,12 @@ const FileUploadComponent: React.FC = () => {
         }
         
         //Post record of the uploaded file into database
-        await axios.post('http://localhost:2024/api/fileMetadata/insertRecord', recordFile);
+        const uploadDbResponse = await axios.post('http://localhost:2024/api/fileMetadata/insertRecord', recordFile);
+        
+        //Console log
+        if (uploadDbResponse.status === 200) {
+            setUploadStatus('Upload file successfully!');
+        }
 
         // Reset file state after successful upload
         setFile(null);
@@ -78,6 +84,8 @@ const FileUploadComponent: React.FC = () => {
         </div>
         <div className='upload-button'>
             <button onClick={handleUpload}>Upload</button>
+            <br/>
+            {uploadStatus && ''}
         </div>
     </div>
 
