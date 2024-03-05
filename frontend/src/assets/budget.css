@@ -1,0 +1,72 @@
+.BudgetPage {
+    display: flex;
+    height: 100vh;                  /* Adjust from top */
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+  
+.BudgetUpload {
+    flex: 1;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    background-color:aliceblue;
+    border-radius: 5px;
+}
+
+.BudgetDashboard {
+    flex: 2.5;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+  
+.BudgetDivider {
+    width: 1px;                     /* Adjust thickness */
+}
+
+.file-external-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;            /* horizontally align */
+    justify-content: center;        /* vertically align */
+    height: 25vh;                   /* Adjust the height from top */
+}
+
+.file-upload-container {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.file-upload-container input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-upload-container:hover {
+    border-color: #aaa;
+}
+
+.upload-button {
+    font-size: 20px;                        /* Change font size */
+    padding: 10px 10px;                     /* Adjust padding */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-button:hover {
+    background-color: transparent; /* Button background color on hover */
+}
