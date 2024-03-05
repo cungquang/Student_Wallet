@@ -183,7 +183,7 @@ const LoginView: React.FC = () => {
         }
         catch (error:any) {
             console.error('Error verifying token: ', error);
-            if (error.response.status === 401) {
+            if (error.response === 401) {
                 // Token expired, redirect to login screen
                 navigate('/login');
             } else {
