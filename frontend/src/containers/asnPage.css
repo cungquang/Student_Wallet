@@ -1,0 +1,91 @@
+.asn-list-item{
+    display: grid;
+    grid-template-columns: 1fr 4fr 4fr 4fr 1fr 1fr 1fr;
+    border: #cccccc 2px solid;
+    padding: 10px;
+    margin-top: 5px;
+}
+.header-wrapper{
+    margin: 10px;
+    vertical-align: middle;
+    display: flex;
+}
+.asn-memo{
+    grid-column: 1/-1;
+    margin: 10px;
+    border: #cccccc 2px dotted;
+}
+.sort-by{
+    height: 30px;
+    width: 100px;
+}
+.search-bar{
+    width: 150px;
+}
+.asn-body{
+    border: black 1px solid;
+    padding: 15px;
+}
+.asn-add-btn{
+    width: 55px;
+    height: 55px;;
+    font-size: 30pt;
+    border: none;
+    border-radius: 100%;
+    background-color: aquamarine;
+    cursor: pointer;
+}
+.content-wrapper{
+    width: 90%;
+    margin: auto;
+}
+.asn-add-form{
+    position: fixed;
+    left: 54%;
+    top: 12%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 350px;
+    height: 500px;
+    
+}
+
+.asn-add-form input[type="text"],
+.asn-add-form input[type="date"],
+.asn-add-form button[type="submit"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.asn-add-form button {
+    background-color:aquamarine;
+    color: black;
+    font-weight: bold;
+    font-size: 15pt;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.asn-add-form button:hover {
+    background-color:darkgreen;
+}
+
+.asn-add-form button[name="closeButton"] {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.asn-add-form button[name="closeButton"]:hover {
+    color: black
+}

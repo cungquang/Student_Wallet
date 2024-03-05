@@ -4,8 +4,8 @@ const {getDB} = require('../../db');
 const getAsnAll = async (req, res) =>{
     try{
         const db = getDB();
-        const result = await db.collection('assignments').find()
-        res.status(201).json(result);
+        const result = await db.collection('assignments').find().toArray();
+        res.status(200).json({result: result, message: "got all asssignments"});
     } catch (error){
         res.status(400).json({
             message: ("Error while retrieving assignments: ", error.message)
@@ -28,8 +28,8 @@ const createAsn = async (req, res) =>{
     try{
         const db = getDB();
         const newAsnData = {...req.body};
-        const result = await db.collection('assignments').insertOne(newAsnData);
-        res.status(201).json(result.ops[0]);
+        await db.collection('assignments').insertOne(newAsnData);
+        res.status(201).json({message: "Insert success"});
     } catch (error){
         res.status(400).json({
             message: ("Error while creating the assignment: ", error.message)
