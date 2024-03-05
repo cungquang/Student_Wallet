@@ -1,6 +1,6 @@
 import React from 'react';
 import '../assets/budget.css';
-import FileDropzone from '../components/budget/FileDropZone';
+import FileUploadComponent from '../components/budget/FileUploadComponent';
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
 
@@ -15,7 +15,7 @@ const BudgetPage: React.FC = () => {
                 </div>
                 <div className="BudgetDivider"></div>
                 <div className="BudgetUpload">
-                    <FileDropzone/>
+                    <FileUploadComponent/>
                 </div>
             </div>
             <Footer />
