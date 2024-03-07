@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); 
 
-const PORT = 9999;
+const PORT = 3003;
 
 dbConnection()
 .then(()=>{
@@ -33,7 +33,7 @@ dbConnection()
 
   //------ SERVER -------//
   app.listen(PORT, () =>{
-    console.log('Server is running on port 9999');
+    console.log('Server is running on port 3003');
   })
 })
 

@@ -1,5 +1,7 @@
 const {asnSchema} = require('../models/asn.model');
 const {getDB} = require('../../db');
+const { ObjectId } = require('mongodb');
+
 
 const getAsnAll = async (req, res) =>{
     try{
@@ -27,10 +29,12 @@ const getUserAsnAll = async (req, res) =>{
 const createAsn = async (req, res) =>{
     try{
         const db = getDB();
-        const newAsnData = {...req.body};
-        await db.collection('assignments').insertOne(newAsnData);
+        const newData = {...req.body};
+        newData._id = new ObjectId().toHexString();
+        await db.collection('assignments').insertOne(newData);
         res.status(201).json({message: "Insert success"});
     } catch (error){
+        console.log(error.message);
         res.status(400).json({
             message: ("Error while creating the assignment: ", error.message)
         })
@@ -51,11 +55,20 @@ const deleteAsn = async(req, res) =>{
 const updateAsn = async (req, res)=>{
     try{
         const db = getDB();
-        await db.collection('assignments').upodateOne(...req.body);
-        res.status(201).json({message: ("Assignment updated: ", req.body.title)});
-    } catch (error){
+        const updated = req.body.item;
+        await db.collection('assignments').updateOne({_id: updated._id}, {$set: {
+        title: updated.title,
+        done: updated.done,
+        subject: updated.subject,
+        dueDate: updated.dueDate,
+        tag: updated.tag,
+            }});
+        res.status(201).json({message: ("Assignment updated: "+ req.body.item.title)});
+    }
+    catch (error){
+        console.log(error.message)
         res.status(400).json({
-            message: ("Error while updating the assignment: ", error.message)
+            message: ("Error while updating the assignment: "+ error.message)
         })
 }}
 

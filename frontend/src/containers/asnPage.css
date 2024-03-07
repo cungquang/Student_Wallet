@@ -37,6 +37,7 @@
 }
 .content-wrapper{
     width: 90%;
+    max-width: 800px;
     margin: auto;
 }
 .asn-add-form{
@@ -88,4 +89,10 @@
 
 .asn-add-form button[name="closeButton"]:hover {
     color: black
+}
+
+input[type="checkbox"] {
+  width: 25px;
+  height: 25px;
+
 }
