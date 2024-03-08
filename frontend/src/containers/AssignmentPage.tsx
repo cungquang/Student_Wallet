@@ -87,13 +87,15 @@ const AssignmentPage: React.FC = () => {
         if (!editingAsn) return null;
     
         return (
-            <form className="asn-edit-form" onSubmit={(e) => {
+            <form className="asn-add-form" onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmitEdit(editingAsn);
             }}>
                 <h2>Edit Assignment</h2>
-                <button type="button" onClick={() => setEditingAsn(null)}>Cancel</button>
+                <button type="button"  name="closeButton"  onClick={() => setEditingAsn(null)}>X</button>
+
                 <label>Assignment Title</label>
+                
                 <input type="text" id="editAssignmentTitle" name="editAssignmentTitle" value={editingAsn.title} onChange={(e) => setEditingAsn({ ...editingAsn!, title: e.target.value })}></input>
                 <label>Subject</label>
                 <input type="text" id="editSubject" name="editSubject" value={editingAsn.subject} onChange={(e) => setEditingAsn({ ...editingAsn!, subject: e.target.value })}></input>
