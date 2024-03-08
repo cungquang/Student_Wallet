@@ -14,23 +14,35 @@ const getAsnAll = async (req, res) =>{
         })
     }
 }
-const getUserAsnAll = async (req, res) =>{
-    try{
+const getUserAsnAll = async (req, res) => {
+    try {
         const db = getDB();
-        const result = await db.collection('assignments').find({uid: req.uid})
-        res.status(201).json(result);
-    } catch (error){
+        const uid = req.params.uid; 
+        const result = await db.collection('assignments').find({ uid }).toArray();
+
+        if (result.length === 0) {
+            const sampleData = [{
+                _id: "1", uid, title: "372Asn", done: false, subject: "CMPT 372",
+                dueDate: new Date().toISOString().slice(0, 10), tag: "#Urgent", memo: "Blah Blah"
+            }];
+            res.status(200).json({ result: sampleData }); 
+        } else {
+            res.status(200).json({ result });
+        }
+    } catch (error) {
         res.status(400).json({
-            message: ("Error while retrieving assignments: ", error.message)
-        })
+            message: "Error while retrieving assignments: " + error.message
+        });
     }
-}
+};
+
 
 const createAsn = async (req, res) =>{
     try{
         const db = getDB();
         const newData = {...req.body};
         newData._id = new ObjectId().toHexString();
+        newData.uid =req.params.uid;
         await db.collection('assignments').insertOne(newData);
         res.status(201).json({message: "Insert success"});
     } catch (error){

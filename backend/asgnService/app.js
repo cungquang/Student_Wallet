@@ -17,10 +17,10 @@ dbConnection()
   // Get all assignments
   app.get('/assignments', getAsnAll)
   // Get all assignments for a specific user
-  app.get('users/:uid/assignments', getUserAsnAll)
+  app.get('/assignments/users/:uid', getUserAsnAll)
 
   //------ POST -------//
-  app.post('/assignments/add', createAsn);
+  app.post('/assignments/add/:uid', createAsn);
 
 
   //------ DELETE -------//
