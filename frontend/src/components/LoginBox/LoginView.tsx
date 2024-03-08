@@ -134,7 +134,7 @@ const LoginView: React.FC = () => {
     const [signupMSG, setSignupMSG] = useState(true);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
-    const [iscredValid, setIsCredValid] = useState(false);
+    const [iscredValid, setIsCredValid] = useState(true);
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('default message');
     const [showPassword, setShowPassword] = useState(false);
