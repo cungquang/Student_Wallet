@@ -6,6 +6,7 @@ import SelectionPage from './containers/SelectionPage';
 import BudgetPage from './containers/BudgetPage';
 import AssignmentPage from './containers/AssignmentPage';
 import ResumePage from './containers/ResumePage';
+import ResumeResultPage from './containers/ResumePage';
 
 const App:React.FC = () => {
   return (
@@ -16,7 +17,9 @@ const App:React.FC = () => {
             <Route path="/selection" element={<SelectionPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/assignment" element={<AssignmentPage />} />
-            <Route path="/resume" element={<ResumePage />} />
+            <Route path="/resume" element={<ResumePage />}>
+                <Route path="result" element={<ResumeResultPage />} />
+            </Route>
           </Routes>
         </BrowserRouter>
     </div>
