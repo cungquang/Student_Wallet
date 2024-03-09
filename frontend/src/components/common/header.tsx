@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import profile from '../../resources/profile.png';
+import logo from '../../resources/logo.png';
 
 const HeaderWrapper = styled.footer`
     width: 100%;
@@ -42,8 +43,8 @@ const SideWrapper = styled.div`
 const Logo = styled.img`
     width: 100px;
     height: 100px;
-    background-color: #D9D9D9;
     border: none;
+    border-radius: 10px;
 `;
 
 const Profile = styled.button`
@@ -66,7 +67,7 @@ const Header: React.FC = () => {
         <div>
             <HeaderWrapper>
                 <SideWrapper>
-                    <Logo /> 
+                    <Logo src={logo} alt="Logo" />
                 </SideWrapper>
                 <NameWrapper>
                     <AppName onClick={handleAppNameClick}>UniKeep</AppName>
