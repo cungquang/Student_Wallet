@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const authport = 3005;
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -155,7 +157,7 @@ const LoginView: React.FC = () => {
     
     const verifyToken = async (accessToken: string) => {
         try {
-            const verifyRes = await axios.get('http://localhost:3000/check-user', {
+            const verifyRes = await axios.get(`http://localhost:${authport}/check-user`, {
                 headers: {
                     authorization: `Bearer ${accessToken}`
                 }
@@ -163,11 +165,11 @@ const LoginView: React.FC = () => {
     
             console.log("Verification response: ", verifyRes);
             try {
-                const response = await axios.post('http://localhost:3000/decode-token', { accessToken: accessToken });
+                const response = await axios.post(`http://localhost:${authport}/decode-token`, { accessToken: accessToken });
     
                 const userInfo = response.data.decodedToken;
     
-                const userRes = await axios.get(`http://localhost:3000/check-user`, {
+                const userRes = await axios.get(`http://localhost:${authport}/check-user`, {
                     headers: {
                         authorization: `Bearer ${accessToken}`
                     }
@@ -197,7 +199,7 @@ const LoginView: React.FC = () => {
     const handleSignIn = async () => {
         setSignupMSG(true);
         try {
-            const response = await axios.post('http://localhost:3000/signin', { email, password });
+            const response = await axios.post(`http://localhost:${authport}/signin`, { email, password });
             console.log(`UID: ${response.data.user.uid}`); 
     
             // Do the second request after UID is obtained
@@ -215,12 +217,12 @@ const LoginView: React.FC = () => {
         setSignupMSG(true);
         let Message = ''; // Initialize errorMessage variable
         try {
-            const response = await axios.post('http://localhost:3000/signup', { email, password });
+            const response = await axios.post(`http://localhost:${authport}/signup`, { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
                 const { uid, idToken } = response.data.user;
 
-                const userResponse = await axios.get(`http://localhost:3000/user/${uid}`, {
+                const userResponse = await axios.get(`http://localhost:${authport}/user/${uid}`, {
                     headers: {
                         authorization: `Bearer ${idToken}`
                     }
