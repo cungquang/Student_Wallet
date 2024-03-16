@@ -7,7 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json()); 
 
-const PORT = 3003;
+const uploadIP = process.env.uploadServiceIP;
+const PORT = process.env.asnServicePORT;
 
 dbConnection()
 .then(()=>{
