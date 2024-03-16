@@ -22,12 +22,16 @@ const FileUploadComponent: React.FC = () => {
     if (!file) return;
 
     try {
+        //Get file data
         const formData = new FormData();
         formData.append('file', file);
+        
+        //Get access token
+        const storedToken = localStorage.getItem('accessToken');
 
         //Access local storage -> get "access token"
-        const decodedToken = await axios.post('/decode-token');
-        const userId = decodedToken;
+        const decodedTokenResponse = await axios.post('http://localhost:4000/decode-token', { accessToken: storedToken });
+        const userId = decodedTokenResponse.data.uid;
 
         //Upload the file to blob
         const response = await axios.post('http://localhost:2024/api/file/upload', formData, {
