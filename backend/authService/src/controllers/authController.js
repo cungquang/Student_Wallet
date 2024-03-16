@@ -1,5 +1,4 @@
-
-const { getAuth, signInWithEmailAndPassword, sendEmailVerification , onAuthStateChanged, createUserWithEmailAndPassword } = require("firebase/auth");
+const { getAuth, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, createUserWithEmailAndPassword } = require("firebase/auth");
 const { initializeApp } = require("firebase/app");
 const firebaseConfig = {
     apiKey: "AIzaSyDI26Bw2RZkbNJp-U77lA3v_fX_Wou_hWQ",
@@ -24,14 +23,14 @@ async function signInUser(req, res) {
         const { email, password } = req.body;
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        const idToken = await user.getIdToken(); 
+        const idToken = await user.getIdToken();
         res.json({
             message: "Login successful",
             user: user.toJSON(),
-            idToken: idToken 
+            idToken: idToken
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: `Sign in error: ${error.message}` });
     }
 }
 
@@ -50,7 +49,8 @@ async function signUpUser(req, res) {
             user: user.toJSON()
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log(error);
+        res.status(500).json({ error: `Sign up error: ${error.message}` });
     }
 }
 
@@ -61,7 +61,7 @@ async function getAllUsers(req, res) {
         console.log(users);
         res.json(users);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: `Get all user error: ${error.message}` });
     }
 }
 
@@ -72,7 +72,7 @@ async function getUserByUID(req, res) {
         const userRecord = await admin.auth().getUser(uid);
         res.json(userRecord.toJSON());
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: `Get user uid error: ${error.message}` });
     }
 }
 
@@ -94,8 +94,8 @@ const verifyToken = async (req, res, next) => {
         const idToken = authHeader.split('Bearer ')[1];
 
         await firebase_admin.auth().verifyIdToken(idToken);
-        
-        next(); 
+
+        next();
     } catch (error) {
         res.status(401).json({ error: 'Failed to authenticate token' });
     }
@@ -110,7 +110,7 @@ async function decodeTokenHandler(req, res) {
         const decodedToken = await firebase_admin.auth().verifyIdToken(idToken);
         res.json({ decodedToken: decodedToken });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: `Token decoding error: ${error.message}` });
     }
 }
 

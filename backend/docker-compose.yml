@@ -14,6 +14,19 @@ services:
     depends_on:
       - unikeep_mongodb
 
+  unikeep_asnservice:
+    build:
+        context: ./asgnService
+        dockerfile: Dockerfile
+    container_name: unikeep_asnservice
+    # image: 
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+    depends_on:
+      - unikeep_mongodb
+
   unikeep_mongodb:
     container_name: mongoDB372
     image: mongo:latest       # or specify a specific version like mongo:4.4
