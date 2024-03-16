@@ -12,6 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
+const PORT =3005;
 // POST: Sign in
 app.post('/signin', signInUser);
 
@@ -32,8 +33,8 @@ app.get('/check-user', verifyToken, (req, res) => {
   res.status(200).json({ message: 'User is authenticated' });
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(PORT, () => {
+    console.log('Server is running on port 3005');
 });
 
 
