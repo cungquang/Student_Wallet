@@ -21,4 +21,4 @@ ENV PORT=3001
 ENV ENVIRONMENT=Production
 
 # Run the compiled JavaScript file when the container launches
-CMD ["node", "app.js"]
+CMD ["nodemon", "app.js"]
