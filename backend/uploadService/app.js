@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { config } = require('dotenv');
+const cors = require('cors');
 const { Configs } = require('./src/configs/configs');
 const UploadFileRepository = require('./src/repositories/uploadFileRepository');
 const FinanceRepository = require('./src/repositories/financeRepository');
@@ -16,9 +17,10 @@ const FinanceRoutes = require('./src/routes/financeRoutes');
 const DatabaseService = require('./src/services/databaseService');
 const AzureAIService = require('./src/services/azureAiService');
 
+
 // Get environment variables & setup config
 require('dotenv').config();
-const PORT = process.env.PORT || 2024;
+const PORT = process.env.PORT || 3001;
 const ENV = process.env.ENV || "Development";
 const configs = new Configs(ENV);
 
@@ -68,17 +70,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(helmet());
-
-// Static page - for testing
-app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/static/index.html');
-});
+app.use(cors());
 
 // API routes
 app.use("/api/file", uploadRouter.configureUploadRoute());
 app.use("/api/fileMetadata", uploadFileDbRouter.configureUploadFileDbRoute());
 app.use("/api/finance", financeRouter.configureFinanceRoutes());
 
+// Static page - for testing
+app.get('/', (request, response) => {
+    response.sendFile(__dirname + '/static/index.html');
+});
 
 // Start the server
 app.listen(PORT, () => {
