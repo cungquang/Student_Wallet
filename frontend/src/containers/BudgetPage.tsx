@@ -10,7 +10,7 @@ const testStyle = { width: '50%', height: '20px' }
 const testStyle2 = { width: '50%', height: '60px' }
 
 const BudgetPage: React.FC = () => {
-    const [isVisible, setIsVisible] = useState(false);
+    const [isEnable, setIsEnable] = useState(false);
     const [totalCost, setTotalCost] = useState("");
     const [totalTax, setTotalTax] = useState("");
     const [listOfItems, setListOfItems] = useState("");
@@ -29,7 +29,7 @@ const BudgetPage: React.FC = () => {
     }
 
     const handleIsVisible = (data:any) => {
-        setIsVisible(data);
+        setIsEnable(data);
     }
 
     //useState -> filter by period: current week, current month, current Year
@@ -91,7 +91,7 @@ const BudgetPage: React.FC = () => {
                     <div id='displayReceipt'>
                         <form style={{ width: '100%' }}>
                             <EditTextBoxComponent
-                                isVisible={isVisible}
+                                isEnable={isEnable}
                                 onChange={handleTotalCost}
                                 textBoxId='TotalCost'
                                 textBoxLabel="Total Cost"
@@ -100,7 +100,7 @@ const BudgetPage: React.FC = () => {
                             />
                             
                             <EditTextBoxComponent
-                                isVisible={isVisible}
+                                isEnable={isEnable}
                                 onChange={handleTotalTax}
                                 textBoxId='TotalTax'
                                 textBoxLabel="Total Tax"
@@ -109,7 +109,7 @@ const BudgetPage: React.FC = () => {
                             />
 
                             <EditTextBoxComponent
-                                isVisible={isVisible}
+                                isEnable={isEnable}
                                 onChange={handleListOfPurchasedItems}
                                 textBoxId='ListPurchasedItem'
                                 textBoxLabel="Purchased Items"

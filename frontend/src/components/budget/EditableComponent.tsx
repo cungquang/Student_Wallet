@@ -6,11 +6,11 @@ type EditTextBoxProps = {
     textBoxLabel: string;
     textValue: string;
     styles: any;
-    isVisible: boolean;
+    isEnable: boolean;
 }
 
-const EditTextBoxComponent: React.FC<EditTextBoxProps> = ({ isVisible, onChange, textBoxId, textBoxLabel, textValue, styles }) => {
-    if(!isVisible) {
+const EditTextBoxComponent: React.FC<EditTextBoxProps> = ({ isEnable, onChange, textBoxId, textBoxLabel, textValue, styles }) => {
+    if(!isEnable) {
         return null;
     }
     
