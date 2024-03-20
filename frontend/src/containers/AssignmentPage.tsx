@@ -18,7 +18,7 @@ interface asnData {
 const AssignmentPage: React.FC = () => {
 
     const IP = process.env.asnServiceIP;
-    const PORT = "3003"
+    const PORT =  process.env.asnServicePORT;
     const sampleData: asnData = {
         _id: "", uid: "1234", title: "372Asn", done: false, subject: "CMPT 372",
 
