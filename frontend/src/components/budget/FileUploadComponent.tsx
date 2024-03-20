@@ -39,8 +39,22 @@ const FileUploadComponent: React.FC = () => {
     try {
         //Get file data
         const formData = new FormData();
-        formData.append('fileInput', file);
-        
+        formData.append('file', file);
+
+        //Upload the file to blob
+        const response = await axios.post(UPLOAD_FILE_URL, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        // console.log(response);
+
+        // const signedUrl = "https://storage.googleapis.com/upload-bucket-storage/16a581bb-08f6-4d92-8d50-5acce072c1ef.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=admincmpt372%40cmpt372-finalproject.iam.gserviceaccount.com%2F20240320%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240320T215016Z&X-Goog-Expires=298&X-Goog-SignedHeaders=host&X-Goog-Signature=246c4fb5ad624fc449b678b8bd4a1ade3302096e4c128c51f985cc105509276454c65c8e55306ce43a7d5b7eea4e233a939ace63f81106cbc93c034cf2d3f94d82d558957b7c2748f8129497079ed7dbd9b1a2e84b20cb920f53e531ff77c8e16a4d091d120515af8c029829b6411add8532af2d3f820734fc37823cd200cef5d8d52b808c77cf73039a88ea4fcfc836e149c14b0ead157bad90eccf0199b1e17698f13394626a9a9eeb4608fc3117d3e28cff4ec02ea199831223cf35136d5061260dd5b4130ee50284cfdee08108c0ef51da28aee42b3cb69daba0229b029aacc770e3724ab2d50dac91d7bae9c265165b9089c196da0e270cfd66c0aed283";
+        // const receiptData = await axios.post(AI_SERVICE_URL, { RequestUrl: signedUrl });
+        // console.log(receiptData);
+
+
         //Get access token
         const storedToken = localStorage.getItem('accessToken');
 
@@ -49,16 +63,6 @@ const FileUploadComponent: React.FC = () => {
         //const decodedTokenResponse = await axios.post(DECODE_TOKEN_URL, { accessToken: storedToken });
         //const userId = decodedTokenResponse.data.uid || 'tester2';
         const userId = 'tester2';
-
-        //Upload the file to blob
-        const response = await axios.post(UPLOAD_FILE_URL, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        if (response.status === 200) {
-          setUploadStatus('File uploaded successfully!');
-        }
 
         //Retrieve information from response
         const { objectName, signedUrl, createdDate, lastModified } = response.data;        
