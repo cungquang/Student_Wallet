@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, './build')));
 
-const PORT =3005;
+const PORT =3000;
 // POST: Sign in
 app.post('/signin', signInUser);
 
@@ -36,7 +36,7 @@ app.get('/check-user', verifyToken, (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Server is running on port 3005');
+    console.log('Server is running on port 3000');
 });
 
 
