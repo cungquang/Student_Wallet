@@ -54,12 +54,14 @@ const FileUploadComponent: React.FC = () => {
         const { objectName, createdDate, lastModified } = res_upload.data; 
         console.log(objectName);
 
-        const res_getSignedUrl = await axios.post(UPLOAD_GETSIGNEDUPR_URL, null, {
-            params: {
-                objectName: objectName
-            }
+        //Get signed URL to enable accessing the uploaded file
+        const res_getSignedUrl = await axios.get(UPLOAD_GETSIGNEDUPR_URL, {
+          params: {
+            objectName: objectName
+          }
         });
         const { signedUrl } = res_getSignedUrl.data;
+      
 
         console.log(signedUrl);
 

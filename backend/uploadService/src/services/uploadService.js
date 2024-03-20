@@ -1,16 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 const utils = require('../utils/utils');
 
-const optionSignedUrl = {
-    version: 'v4',                          //use v4 signing algorithm
-    action: 'read',                         //specify action
-    expires: Date.now() + 15*60*1000        //set limit time access - 15 minutes
-};
-
-const optionDelete = {
-    storageClass: 'STANDARD'
-}
-
 class UploadService {
     constructor(config) {
         this.config = config;
@@ -75,13 +65,22 @@ class UploadService {
         if (!objectName) {
             throw new Error('A file name must be specified.');
         }
-        
+
+        const optionSignedUrl = {
+            version: 'v4',                          //use v4 signing algorithm
+            action: 'read',                         //specify action
+        };
+
         const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
         return signedUri[0];
     }
 
     async asyncDelete(objectName) {
         try {
+            const optionDelete = {
+                storageClass: 'STANDARD'
+            }
+            
             //Need to verify before delete
             await this.bucket.file(objectName).delete(optionDelete);
             return 'Success';
