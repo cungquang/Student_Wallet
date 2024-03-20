@@ -72,6 +72,10 @@ class UploadService {
     }
 
     async asyncSignedUrl(objectName){
+        if (!objectName) {
+            throw new Error('A file name must be specified.');
+        }
+        
         const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
         return signedUri[0];
     }

@@ -42,6 +42,7 @@ class UploadFileDbController {
             throw(error);
         }
     }
+    
 
     //Function to update the record contents
     async asyncUpdateRecord(request, response) {
