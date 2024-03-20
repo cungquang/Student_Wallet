@@ -2,7 +2,7 @@
 FROM node:20.7.0
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /authService
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
@@ -16,10 +16,10 @@ COPY . .
 # Compile TypeScript code
 
 # Make port 3000 available to the world outside this container
-EXPOSE 3005
+EXPOSE 3000
 
 # Define environment variable
-ENV PORT=3005
+ENV PORT=3000
 
 # Run the compiled JavaScript file when the container launches
 CMD ["node", "app.js"]

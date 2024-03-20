@@ -17,6 +17,8 @@ interface asnData {
 
 const AssignmentPage: React.FC = () => {
 
+    const IP = process.env.asnServiceIP;
+    const PORT = "3003"
     const sampleData: asnData = {
         _id: "", uid: "1234", title: "372Asn", done: false, subject: "CMPT 372",
 
@@ -36,7 +38,7 @@ const AssignmentPage: React.FC = () => {
 
     const updateList = async () => {
         const uid = localStorage.getItem('uid');
-        const response = await axios.get(`http://localhost:3003/assignments/users/${uid}`);
+        const response = await axios.get(`http://${IP}:${PORT}/assignments/users/${uid}`);
         setAllAsn(response.data.result);
     };
     
@@ -55,15 +57,15 @@ const AssignmentPage: React.FC = () => {
 
     const handleDelete = async (id: String) => {
         if (window.confirm("Do you want to delete the assignment?")) {
-            await axios.delete(`http://localhost:3003/assignments/delete/${id}`);
+            await axios.delete(`http://${IP}:${PORT}/assignments/delete/${id}`);
         }
     }
 
     const handleCheck = async (item: asnData) => {
         item.done = !item.done;
         setChecked(item.done)
-        await axios.put(`http://localhost:3003/assignments/update/${item._id}`, { item });
-        setAllAsn((await axios.get("http://localhost:3003/assignments")).data.result)
+        await axios.put(`http://${IP}:${PORT}/assignments/update/${item._id}`, { item });
+        setAllAsn((await axios.get(`http://${IP}:${PORT}/assignments`)).data.result)
         setChecked(!checked)
 
     };
@@ -73,10 +75,10 @@ const AssignmentPage: React.FC = () => {
 
     const handleSubmitEdit = async (editedAsn: asnData) => {
         try {
-            await axios.put(`http://localhost:3003/assignments/update/${editedAsn._id}`, { item: editedAsn });
+            await axios.put(`http://${IP}:${PORT}/assignments/update/${editedAsn._id}`, { item: editedAsn });
             // Fetch updated assignment list
             const uid = localStorage.getItem('uid');
-            const response = await axios.get(`http://localhost:3003/assignments/users/${uid}`);
+            const response = await axios.get(`http://${IP}:${PORT}/assignments/users/${uid}`);
             setAllAsn(response.data.result);
             setEditingAsn(null); // Close edit form after successful edit
         } catch (error: any) {
@@ -98,8 +100,8 @@ const AssignmentPage: React.FC = () => {
             memo: formData.get("memo") as string,
         };
         const uid = localStorage.getItem('uid');
-        await axios.post(`http://localhost:3003/assignments/add/${uid}`, newAsnData);
-        const response = await axios.get(`http://localhost:3003/assignments/users/${uid}`);
+        await axios.post(`http://${IP}:${PORT}/assignments/add/${uid}`, newAsnData);
+        const response = await axios.get(`http://${IP}:${PORT}/assignments/users/${uid}`);
         setAllAsn(response.data.result);
         setAdding(false);
     }

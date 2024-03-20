@@ -19,11 +19,12 @@ services:
         context: ./asgnService
         dockerfile: Dockerfile
     container_name: unikeep_asnservice
-    # image: 
+    image: civbf1/asgn:latest
     ports:
-      - "3003:3003"
+      - "3002:3002"
     environment:
-      PORT: 3003
+      PORT: 302
+      MONGODB_URI: mongodb://mongoDB372:27017
     depends_on:
       - unikeep_mongodb
 
