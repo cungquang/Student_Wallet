@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import '../assets/budget.css';
 import FileUploadComponent from '../components/budget/FileUploadComponent';
 import LineChartComponent from '../components/budget/LineChartComponent';
@@ -6,16 +6,37 @@ import EditableReceiptComponent from '../components/budget/EditableReceiptCompon
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
 
+
 const BudgetPage: React.FC = () => {
-    const [toEnable, setToEnable] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState<string>('');
+    const [byUser, setByUser] = useState("");
+    const [objectName, setObjectName] = useState("");
+    const [byDate, setByDate] = useState("");
+    const [byMerchant, setByMerchant] = useState("");
+    const [totalCost, setTotalCost] = useState("");
+    const [totalTax, setTotalTax] = useState("");
+    const [listOfItems, setListOfItems] = useState("");
 
-    //useState -> filter by period: current week, current month, current Year
+    //Get data from frontend
+    const handleTransactionDate = (event: ChangeEvent<HTMLInputElement>) => {
+        setByDate(event.target.value);
+    };
 
-    //useState -> chartType
+    const handleMerchantName = (event: ChangeEvent<HTMLInputElement>) => {
+        setByMerchant(event.target.value);
+    };
 
-    //Using useState => update the filter
+    const handleTotalCost = (event: ChangeEvent<HTMLInputElement>) => {
+        setTotalCost(event.target.value);
+    };
 
-    //Collect data according to the state
+    const handleTotalTax = (event: ChangeEvent<HTMLInputElement>) => {
+        setTotalTax(event.target.value);
+    };
+
+    const handleListOfPurchasedItems = (event: ChangeEvent<HTMLInputElement>) => {
+        setListOfItems(event.target.value);
+    }; 
 
     const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const data = [1, 2, 3, 5, 6, 8, 3, 1];
@@ -32,13 +53,43 @@ const BudgetPage: React.FC = () => {
                 <div className="BudgetUpload">
                     <div id='uploadReceipt'>
                         <h3>Upload File</h3>
-                        <FileUploadComponent setToEnable={setToEnable}/> 
+                        <FileUploadComponent 
+                            uploadStatus={uploadStatus} 
+                            setUploadStatus={setUploadStatus}
+                            setByUser={setByUser}
+                            setObjectName={setObjectName}
+                            setByDate={setByDate}
+                            setByMerchant={setByMerchant}
+                            setTotalCost={setTotalCost}
+                            setTotalTax={setTotalTax}
+                            setListOfItems={setListOfItems}
+                        /> 
                     </div>
                     <div>
                         <hr style={{ width: '100%', margin: '10px 0' }} />
                     </div>
                     <div id='displayReceipt'>
-                        <EditableReceiptComponent toEnable={toEnable} />
+                        <EditableReceiptComponent 
+                            objectName={objectName}
+                            byUser={byUser}
+                            byDate={byDate}
+                            byMerchant={byMerchant}
+                            totalCost={totalCost}
+                            totalTax={totalTax}
+                            listOfItems={listOfItems}
+                            setByUser={setByUser}
+                            setByDate={setByDate}
+                            setByMerchant={setByMerchant}
+                            setTotalCost={setTotalCost}
+                            setTotalTax={setTotalTax}
+                            setListOfItems={setListOfItems}
+                            setUploadStatus={setUploadStatus}
+                            handleTransactionDate={handleTransactionDate} 
+                            handleMerchantName={handleMerchantName}
+                            handleTotalCost={handleTotalCost}
+                            handleTotalTax={handleTotalTax}
+                            handleListOfPurchasedItems={handleListOfPurchasedItems}
+                        />
                     </div>
                 </div>
             </div>

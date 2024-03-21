@@ -3,23 +3,45 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 //Configure URL
-//const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || 'localhost:3001';
 const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.132.234';
 
-//const AI_SERVICE_URL = `${process.env.AI_SERVICE_API_URL}` || 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
 const AI_SERVICE_URL = 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
 const UPLOAD_FILE_URL = `http://${UPLOAD_SERVICE_IP}/api/file/upload`;
 const UPLOAD_GETSIGNEDURL_URL = `http://${UPLOAD_SERVICE_IP}/api/file/getsignedurl`;
 const UPLOAD_METADATA_URL = `http://${UPLOAD_SERVICE_IP}/api/fileMetadata/insertRecord`;
 
-interface FileUploadProps {
-  setToEnable: (value: boolean) => void;
+function combineItems(data: Record<string, any>, prefix = 'item', maxItems = Infinity) {
+  const items = [];
+
+  for (let i = 0; i < maxItems; i++) {
+      const propertyName = `${prefix}${i}`;
+      if (propertyName in data) {
+          const item = JSON.parse(data[propertyName]);
+          items.push(item);
+      } else {
+          break;
+      }
+  }
+
+  return JSON.stringify(items);
 }
 
-const FileUploadComponent: React.FC<FileUploadProps> = ({ setToEnable }) => {
+interface FileUploadProps {
+  uploadStatus: string;
+  setUploadStatus: (value: string) => void;
+  setByUser: React.Dispatch<React.SetStateAction<string>>;
+  setObjectName: React.Dispatch<React.SetStateAction<string>>;
+  setByDate: React.Dispatch<React.SetStateAction<string>>;
+  setByMerchant: React.Dispatch<React.SetStateAction<string>>;
+  setTotalCost: React.Dispatch<React.SetStateAction<string>>;
+  setTotalTax: React.Dispatch<React.SetStateAction<string>>;
+  setListOfItems: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploadStatus,
+  setByUser, setObjectName, setByDate, setByMerchant, setTotalCost, setTotalTax, setListOfItems }) => {
   const [file, setFile] = useState<File | null>(null);
   const [filePath, setFilePath] = useState<string>('');
-  const [uploadStatus, setUploadStatus] = useState<string>('');
 
   //Function handle use select file
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,17 +102,23 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ setToEnable }) => {
 
         //Call API to read receipt 
         const receiptData = await axios.post(AI_SERVICE_URL, { RequestUrl: signedUrl });
+        
         if (receiptData.status === 200) {
-          setToEnable(true);
+          //Set data to the below form
+          setByUser(userId);
+          setObjectName(objectName);
+          
+          if (receiptData.data) {
+              const newList = combineItems(receiptData.data);
+              
+              setByDate(receiptData.data.TransactionDate);
+              setByMerchant(receiptData.data.MerchantName);
+              setTotalCost(receiptData.data.Total);
+              setTotalTax(receiptData.data.Tax);
+              setListOfItems(newList);
+          }
         }
 
-        //Temporary store into local storage => allow user to modify before writing into Finance database
-        localStorage.setItem('recent_receipt', JSON.stringify({
-          userId: userId,
-          objectName: objectName,
-          receiptData: receiptData.data
-        }));
-        
         // Reset file state after successful upload
         setFile(null);
         setFilePath('');
@@ -108,7 +136,7 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ setToEnable }) => {
             {file && ''}
         </div>
         <div className='upload-button'>
-            <button type="submit">Submit</button>
+            <button id='fileUploadSubmit' type="submit">Submit</button>
         </div>
         <div>
           {uploadStatus && <span>{uploadStatus}</span>}
