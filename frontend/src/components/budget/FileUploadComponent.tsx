@@ -109,8 +109,6 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ setToEnable }) => {
         </div>
         <div className='upload-button'>
             <button type="submit">Submit</button>
-            <br/>
-            {uploadStatus && ''}
         </div>
         <div>
           {uploadStatus && <span>{uploadStatus}</span>}

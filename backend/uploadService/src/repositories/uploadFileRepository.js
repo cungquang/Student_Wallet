@@ -1,10 +1,10 @@
-DB_NAME = "UploadImageDB";
-COLLECTION_NAME = "Images";
+const UPLOAD_DB_NAME = "UploadImageDB";
+const UPLOAD_COLLECTION_NAME = "Images";
 
 class UploadFileRepository {
     constructor(client){
         this.client = client;
-        this.collection = this.client.db(DB_NAME).collection(COLLECTION_NAME);
+        this.collection = this.client.db(UPLOAD_DB_NAME).collection(UPLOAD_COLLECTION_NAME);
     }
 
     //Function to insert new records
@@ -48,7 +48,7 @@ class UploadFileRepository {
     //Function to verify resources exist
     async asyncResourceExit(filter){
         try{
-            const db = this.client.db(DB_NAME).collection(COLLECTION_NAME);
+            const db = this.client.db(UPLOAD_DB_NAME).collection(UPLOAD_COLLECTION_NAME);
             const count = await db.countDocuments(filter);
             return count;
         } catch(error) {
