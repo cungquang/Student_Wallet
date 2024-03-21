@@ -105,8 +105,8 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploa
         
         if (receiptData.status === 200) {
           //Need to verify is this a valid receipt before further processing => send notice to user
-          const UPDATE_RECEIPT_URL = `http://${UPLOAD_SERVICE_IP}/api/db/updateRecord?userId=${userId}&objectName=${objectName}`
-          await axios.put(UPDATE_RECEIPT_URL, { isRead: true, isReceipt: false });
+          // const UPDATE_RECEIPT_URL = `http://${UPLOAD_SERVICE_IP}/api/db/updateRecord?userId=${userId}&objectName=${objectName}`
+          // await axios.put(UPDATE_RECEIPT_URL, { isRead: true, isReceipt: false });
 
           //Set data to the below form
           setByUser(userId);
