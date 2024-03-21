@@ -1,6 +1,6 @@
 
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://0.0.0.0:27017/";
+const url ="mongodb://mongoDB372:27017"
 const dbName = 'asn-db';
 
 let _db;
@@ -9,6 +9,7 @@ async function dbConnection(){
     try{
         const client = await MongoClient.connect(url); 
           console.log('Connected to MongoDB');
+          console.log("Running ")
           _db = client.db(dbName);
     } catch(error){
         console.error('Error while connecting to MongoDB: ', error);

@@ -19,4 +19,4 @@ EXPOSE 3002
 ENV PORT=3002
 
 # Run the compiled JavaScript file when the container launches
-CMD ["node", "app.js"]
+CMD ["node",  "app.js"]
