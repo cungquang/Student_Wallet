@@ -7,7 +7,7 @@ import { sign } from 'crypto';
 //const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || 'localhost:3001';
 //const LOGIN_SERVICE_IP = process.env.LOGIN_SERVICE_API_IP || 'localhost:4000';
 
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
+const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.132.234';
 const LOGIN_SERVICE_IP = process.env.LOGIN_SERVICE_API_IP || 'localhost:4000';
 
 //const AI_SERVICE_URL = `${process.env.AI_SERVICE_API_URL}` || 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
@@ -60,7 +60,7 @@ const FileUploadComponent: React.FC = () => {
             objectName: objectName
           }
         });
-        const { signedUrl } = res_getSignedUrl.data;
+        const signedUrl = res_getSignedUrl.data;
       
 
         console.log(signedUrl);

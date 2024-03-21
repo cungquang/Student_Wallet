@@ -66,9 +66,13 @@ class UploadService {
             throw new Error('A file name must be specified.');
         }
 
+        // Calculate expiration time (current time + 30 minutes)
+        const expirationTime = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes in milliseconds
+
         const optionSignedUrl = {
-            version: 'v4',                          //use v4 signing algorithm
-            action: 'read',                         //specify action
+            version: 'v4',
+            action: 'read',
+            expires: expirationTime
         };
 
         const signedUri = await this.bucket.file(objectName).getSignedUrl(optionSignedUrl)
