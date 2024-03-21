@@ -14,6 +14,7 @@ const EditTextBoxComponent: React.FC<EditTextBoxProps> = ({ isEnable, onChange, 
         return null;
     }
     
+
     // useState -> keep track of current state => if the state on textValue => change => re-render entire UI
     return (
         <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '10px' }}>
