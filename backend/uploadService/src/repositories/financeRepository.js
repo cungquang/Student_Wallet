@@ -1,10 +1,10 @@
-DB_NAME = "FinanceDB";
-COLLECTION_NAME = "ReceiptRecord";
+const FIN_DB_NAME = "FinanceDB";
+const FIN_COLLECTION_NAME = "ReceiptRecord";
 
 class FinanceRepository {
     constructor(client){
         this.client = client;
-        this.collection = this.client.db(DB_NAME).collection(COLLECTION_NAME);
+        this.collection = this.client.db(FIN_DB_NAME).collection(FIN_COLLECTION_NAME);
     }
 
     //Function to insert new records
@@ -48,7 +48,7 @@ class FinanceRepository {
     //Function to verify resources exist
     async asyncResourceExit(filter){
         try{
-            const db = this.client.db(DB_NAME).collection(COLLECTION_NAME);
+            const db = this.client.db(FIN_DB_NAME).collection(FIN_COLLECTION_NAME);
             const count = await db.countDocuments(filter);
             return count;
         } catch(error) {

@@ -19,6 +19,7 @@ EXPOSE 3000
 
 # Define environment variable
 ENV PORT=3000
+ENV UPLOADSERVICE_URL=http://localhost:3001/api/file/upload
 
 # Run the compiled JavaScript file when the container launches
 CMD ["npm", "app.js"]

@@ -32,6 +32,7 @@ class FinanceController{
                 objectName: body.objectName,
                 createdDate: new Date(body.createdDate),
                 lastModified: new Date(body.lastModified),
+                merchantName: body.merchantName,
                 totalCost: body.totalCost,
                 totalTax: body.totalTax,
                 receiptLine: body.receiptLine
