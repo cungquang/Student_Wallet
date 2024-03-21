@@ -1,8 +1,6 @@
 # Use an official Node.js runtime as a parent image
 FROM node:20.7.0
 
-# Set the working directory to /app
-WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
@@ -24,4 +22,4 @@ ENV PORT=3000
 ENV UPLOADSERVICE_URL=http://localhost:3001/api/file/upload
 
 # Run the compiled JavaScript file when the container launches
-CMD ["node", "app.js"]
+CMD ["npm", "app.js"]

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 //Configure URL
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.132.234';
+const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
 
 const AI_SERVICE_URL = 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
 const UPLOAD_FILE_URL = `http://${UPLOAD_SERVICE_IP}/api/file/upload`;
@@ -104,6 +104,10 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploa
         const receiptData = await axios.post(AI_SERVICE_URL, { RequestUrl: signedUrl });
         
         if (receiptData.status === 200) {
+          //Need to verify is this a valid receipt before further processing => send notice to user
+          const UPDATE_RECEIPT_URL = `http://${UPLOAD_SERVICE_IP}/api/db/updateRecord?userId=${userId}&objectName=${objectName}`
+          await axios.put(UPDATE_RECEIPT_URL, { isRead: true, isReceipt: false });
+
           //Set data to the below form
           setByUser(userId);
           setObjectName(objectName);

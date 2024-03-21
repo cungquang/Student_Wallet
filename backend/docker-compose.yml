@@ -2,7 +2,7 @@ version: "3.8"
 services:
   unikeep_uploadservice:
     build:
-        context: ./uploadservice
+        context: ./uploadService
         dockerfile: Dockerfile
     container_name: unikeep_uploadservice
     image: cungquang1987/cmpt372:unikeep_uploadservice
@@ -35,7 +35,7 @@ services:
     #volume to store & keep data at server level
     volumes:
       - uploadserviceDb:/data/db
-    
+
 #define the volume
 volumes:
   uploadserviceDb: {}

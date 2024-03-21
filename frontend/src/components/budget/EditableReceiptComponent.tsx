@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import EditTextBoxComponent from './EditableComponent';
 import axios from 'axios';
 
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.132.234';
+const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
 
 const FINANCE_SERVICE_URL = `http://${UPLOAD_SERVICE_IP}/api/finance/insertReceiptRecord`;
 
@@ -57,7 +57,7 @@ const EditableReceiptComponent: React.FC<EditableReceiptComponentsProps> = ({ ob
                     'Content-Type': 'application/json'
                 }
             };
-            console.log(FINANCE_SERVICE_URL);
+
             //Insert record to database
             const res_update = await axios.post(FINANCE_SERVICE_URL, record, config);
             if (res_update.status === 200) {

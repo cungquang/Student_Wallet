@@ -7,12 +7,13 @@ const app = express();
 app.use(cors());
 app.use(express.json()); 
 
-const uploadIP = process.env.uploadServiceIP;
-const PORT = process.env.asnServicePORT;
 
 dbConnection()
 .then(()=>{
 
+  app.get('/', (req, res) => {
+    res.send('Server is running and reachable!');
+  });
   //------ GET -------//
 
   // Get all assignments
@@ -33,8 +34,8 @@ dbConnection()
   
 
   //------ SERVER -------//
-  app.listen(PORT, () =>{
-    console.log('Server is running on port 3003');
+  app.listen(3002, () =>{
+    console.log('Server is running on port 3002');
   })
 })
 
