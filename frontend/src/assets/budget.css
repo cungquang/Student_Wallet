@@ -70,3 +70,28 @@
 .upload-button:hover {
     background-color: transparent; /* Button background color on hover */
 }
+
+.button-graph-container {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+
+.button-wrapper > div {
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.button-wrapper:last-child {
+    margin-right: 0; /* Remove margin from the last button */
+}
+
+.button-wrapper button {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease; /* Adding transition for smooth effect */
+}
+
+.button-wrapper button:hover {
+    background-color: lightgray; /* Change background color when hovered */
+}

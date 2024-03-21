@@ -17,15 +17,15 @@ ChartJS.register(
 
 interface LineChartProps {
     labels: string[];
-    InputData: number[];
+    inputData: number[];
 }
 
-const LineChartComponent: React.FC<LineChartProps> = ({ labels, InputData }) =>  {
+const LineChartComponent: React.FC<LineChartProps> = ({ labels, inputData }) =>  {
     const data = {
         labels: labels,
         datasets: [{
             labels: 'Cost of the Week',
-            data: InputData,
+            data: inputData,
             backgroundColor: 'red',
             borderColor: 'black',
             pointBorderColor: 'red',

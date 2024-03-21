@@ -1,7 +1,7 @@
-import React, { ChangeEvent, useState } from 'react';
 import '../assets/budget.css';
+import React, { ChangeEvent, useState } from 'react';
 import FileUploadComponent from '../components/budget/FileUploadComponent';
-import LineChartComponent from '../components/budget/LineChartComponent';
+import DisplayGraphComponent from '../components/budget/DisplayGraphComponent';
 import EditableReceiptComponent from '../components/budget/EditableReceiptComponent';
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
@@ -38,16 +38,16 @@ const BudgetPage: React.FC = () => {
         setListOfItems(event.target.value);
     }; 
 
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const data = [1, 2, 3, 5, 6, 8, 3, 1];
-
     return (
         <div>
             <Header/>
             <div className="BudgetPage">
                 <div className="BudgetDashboard">
                     <div><h3>Dashboard</h3></div>
-                    <LineChartComponent labels={labels} InputData={data}/>
+                    <DisplayGraphComponent 
+                        byUser={byUser}
+                        containerClassName='button-graph-container'
+                    />
                 </div>
                 <div className="BudgetDivider"></div>
                 <div className="BudgetUpload">
