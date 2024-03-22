@@ -23,20 +23,25 @@ const AssignmentPage: React.FC = () => {
         dueDate: new Date().toISOString().slice(0, 10), tag: "#Urgent", memo: "Blah Blah"
     };
 
+    const AssignmentIP = process.env.asnServiceIP || "localhost"; 
+
     const [allAsn, setAllAsn] = useState<Array<asnData>>([sampleData]);
     const [isAdding, setAdding] = useState(false);
     const [checked, setChecked] = useState(false);
     const [editingAsn, setEditingAsn] = useState<asnData | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filtered, setFiltered] = useState<Array<asnData>>([]);
-
+    const [isEmpty, setEmpty] = useState(false);
     const handleChangeSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
     const updateList = async () => {
         const uid = localStorage.getItem('uid');
-        const response = await axios.get(`http://35.202.39.11:3002/assignments/users/${uid}`);
+        const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
+        if(response.data.result.length<1){
+            setEmpty(true);
+        }
         setAllAsn(response.data.result);
     };
     
@@ -55,14 +60,15 @@ const AssignmentPage: React.FC = () => {
 
     const handleDelete = async (id: String) => {
         if (window.confirm("Do you want to delete the assignment?")) {
-            await axios.delete(`http://35.202.39.11:3002/assignments/delete/${id}`);
+            await axios.delete(`http://${AssignmentIP}:3002/assignments/delete/${id}`);
+            updateList();
         }
     }
 
     const handleCheck = async (item: asnData) => {
         item.done = !item.done;
         setChecked(item.done)
-        await axios.put(`http://35.202.39.11:3002/assignments/update/${item._id}`, { item });
+        await axios.put(`http://${AssignmentIP}:3002/assignments/update/${item._id}`, { item });
         setAllAsn((await axios.get(`/assignments`)).data.result)
         setChecked(!checked)
 
@@ -73,10 +79,10 @@ const AssignmentPage: React.FC = () => {
 
     const handleSubmitEdit = async (editedAsn: asnData) => {
         try {
-            await axios.put(`http://35.202.39.11:3002/assignments/update/${editedAsn._id}`, { item: editedAsn });
+            await axios.put(`http://${AssignmentIP}:3002/assignments/update/${editedAsn._id}`, { item: editedAsn });
             // Fetch updated assignment list
             const uid = localStorage.getItem('uid');
-            const response = await axios.get(`http://35.202.39.11:3002/assignments/users/${uid}`);
+            const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
             setAllAsn(response.data.result);
             setEditingAsn(null); // Close edit form after successful edit
         } catch (error: any) {
@@ -98,8 +104,8 @@ const AssignmentPage: React.FC = () => {
             memo: formData.get("memo") as string,
         };
         const uid = localStorage.getItem('uid');
-        await axios.post(`http://35.202.39.11:3002/assignments/add/${uid}`, newAsnData);
-        const response = await axios.get(`http://35.202.39.11:3002/assignments/users/${uid}`);
+        await axios.post(`http://${AssignmentIP}:3002/assignments/add/${uid}`, newAsnData);
+        const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
         setAllAsn(response.data.result);
         setAdding(false);
     }
@@ -164,8 +170,12 @@ const AssignmentPage: React.FC = () => {
                         <span></span>
                         <span></span>
                     </div>
+                    
+                    {isEmpty?<h3>You have no assignments left!</h3>:
+                    <div>
                     {
                         allAsn.map((item: asnData, key) => (
+                            
                             <div key={key} className='asn-list-item'>
                                 <input
                                     type="checkbox"
@@ -182,6 +192,7 @@ const AssignmentPage: React.FC = () => {
                             </div>
                         ))
                     }
+                    </div>}
                 </div>
                 {isAdding ?
                     <form className="asn-add-form" name="asn-add-form" onSubmit={handleSubmitAdd}>
