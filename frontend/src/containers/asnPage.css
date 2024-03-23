@@ -130,3 +130,24 @@ input[type="checkbox"] {
     left: 36%;
     font-size: 15px
 }
+
+.asn-title{
+font-weight: 900;
+margin-left: 10px;
+}
+.asn-date{
+    margin-left: 15%;
+}
+.asn-tag{
+    margin-left: 27%;
+border-radius: 20px;
+background-color: green;
+padding: 5%;
+width: 90px;
+color: white;
+font-size: 14px;
+font-weight: 700;
+}
+
+.done-list{
+}

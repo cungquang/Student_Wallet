@@ -93,7 +93,7 @@ const AssignmentPage: React.FC = () => {
         };
     
         return (
-            <div>
+            <div className="done-list">
                 <h2>Done Assignments</h2>
                 {allAsn.filter(item => item.done).map((item, key) => (
                     <div key={key} className='asn-list-item'>
@@ -266,9 +266,9 @@ const AssignmentPage: React.FC = () => {
                                 checked={item.done}
                                 onChange={() => handleCheck(item)}
                             />
-                            <div>{String(item.title)}</div>
-                            <div>{item.dueDate}</div>
-                            <div>{String(item.tag)}</div>
+                            <div className="asn-title">{String(item.title)}</div>
+                            <div className="asn-date">{item.dueDate}</div>
+                            <div className="asn-tag">#{String(item.tag)}</div>
                                 <button className="asn-list-btn" onClick={() => handleEdit(item)}>EDIT</button>
                                 <button  className="asn-list-btn" onClick={() => handleToggleMemo(item._id)}>MEMO</button>
                             <button className="asn-list-btn" onClick={() => handleDelete(item._id)}>X</button>
