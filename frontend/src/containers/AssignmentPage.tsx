@@ -33,7 +33,9 @@ const AssignmentPage: React.FC = () => {
     const [filtered, setFiltered] = useState<Array<asnData>>([]);
     const [isEmpty, setEmpty] = useState(false);
     const [sortBy, setSortBy] = useState<string>('Name');
-    const [showMemo, setShowMemo] = useState<string | null>(null); // Track which memo to show
+    const [showMemo, setShowMemo] = useState<string | null>(null); 
+    const [filteredAsn, setFilteredAsn] = useState<Array<asnData>>([]);
+    const [showDoneAsn, setShowDoneAsn] = useState(false);
 
     const handleChangeSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -54,6 +56,7 @@ const AssignmentPage: React.FC = () => {
     useEffect(() => {    
     updateList();
         setFiltered(allAsn)
+        
     }, []); 
 
     useEffect(() => {
@@ -69,6 +72,42 @@ const AssignmentPage: React.FC = () => {
     }, [searchTerm]); 
     
 
+    useEffect(() => {
+        setFilteredAsn(allAsn.filter(item => !item.done));
+    }, [allAsn]);
+
+    const renderDoneAsnList = () => {
+        if (!showDoneAsn) return null;
+    
+        const handleRestore = async (id: string) => {
+            try {
+                const updatedAsn = allAsn.find(item => item._id === id);
+                if (updatedAsn) {
+                    updatedAsn.done = false;
+                    await axios.put(`http://${AssignmentIP}:3002/assignments/update/${id}`, { item: updatedAsn });
+                    updateList();
+                }
+            } catch (error: any) {
+                console.error(`Failed to restore the assignment: ${error.message}`);
+            }
+        };
+    
+        return (
+            <div>
+                <h2>Done Assignments</h2>
+                {allAsn.filter(item => item.done).map((item, key) => (
+                    <div key={key} className='asn-list-item'>
+                        <span>{String(item.title)}</span>
+                        <span>{item.dueDate}</span>
+                        <span>{String(item.tag)}</span>
+                        <button className="asn-list-btn" onClick={() => handleRestore(item._id)}>RESTORE</button>
+                        <button className="asn-list-btn" onClick={() => handleDelete(item._id)}>DELETE</button>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+    
     const handleDelete = async (id: String) => {
         if (window.confirm("Do you want to delete the assignment?")) {
             await axios.delete(`http://${AssignmentIP}:3002/assignments/delete/${id}`);
@@ -220,25 +259,28 @@ const AssignmentPage: React.FC = () => {
                     {isEmpty?<h3>You have no assignments left!</h3>:
                     <div>
                     {
-                        allAsn.map((item: asnData, key) => (
-                            
-                            <div key={key} className='asn-list-item'>
-                                <input
-                                    type="checkbox"
-                                    checked={item.done}
-                                    onChange={() => handleCheck(item)}
-                                />
-                                <div>{String(item.title)}</div>
-                                <div>{item.dueDate}</div>
-                                <div>{String(item.tag)}</div>
-                                <button onClick={() => handleEdit(item)}>EDIT</button>
-                                <button onClick={() => handleToggleMemo(item._id)}>MEMO</button>
-                                <button type="button" onClick={() => handleDelete(item._id)}>X</button>
+                    filteredAsn.map((item: asnData, key) => (
+                        <div key={key} className='asn-list-item'>
+                            <input
+                                type="checkbox"
+                                checked={item.done}
+                                onChange={() => handleCheck(item)}
+                            />
+                            <div>{String(item.title)}</div>
+                            <div>{item.dueDate}</div>
+                            <div>{String(item.tag)}</div>
+                                <button className="asn-list-btn" onClick={() => handleEdit(item)}>EDIT</button>
+                                <button  className="asn-list-btn" onClick={() => handleToggleMemo(item._id)}>MEMO</button>
+                            <button className="asn-list-btn" onClick={() => handleDelete(item._id)}>X</button>
                                 {showMemo === item._id && <div className='asn-memo'>{String(item.memo)}</div>} 
-                            </div>
-                        ))
+                        </div>
+                    ))
                     }
                     </div>}
+                    <button  className="asn-list-btn show-done"  onClick={() => setShowDoneAsn(!showDoneAsn)}>
+                        {showDoneAsn ? "Hide Done Assignments" : "Show Done Assignments"}
+                    </button>
+                    {renderDoneAsnList()}
                 </div>
                 {isAdding ?
                     <form className="asn-add-form" name="asn-add-form" onSubmit={handleSubmitAdd}>

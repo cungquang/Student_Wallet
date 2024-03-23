@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Intel+Clear:wght@400;700&display=swap');
+*{
+        font-family: 'Intel Clear', sans-serif;
+
+}
+
 .asn-list-item{
     display: grid;
     grid-template-columns: 1fr 4fr 4fr 4fr 1fr 1fr 1fr;
@@ -35,6 +41,13 @@
     background-color: aquamarine;
     cursor: pointer;
 }
+
+
+.asn-add-btn:hover{
+background-color:darkgreen;
+color: white;
+}
+
 .content-wrapper{
     width: 90%;
     max-width: 800px;
@@ -72,8 +85,21 @@
     cursor: pointer;
 }
 
+.asn-list-btn{
+    background-color:aquamarine;
+    font-weight: 900;
+    cursor: pointer;
+    border: white 1px solid;
+    border-radius: 5px;
+}
+.asn-list-btn:hover{
+    background-color:darkgreen;
+    color: white;
+}
+
 .asn-add-form button:hover {
     background-color:darkgreen;
+    color: white;
 }
 
 .asn-add-form button[name="closeButton"] {
@@ -95,4 +121,12 @@ input[type="checkbox"] {
   width: 25px;
   height: 25px;
 
+}
+
+.show-done{
+    margin: 10px;
+    padding: 10px;
+    position: relative;
+    left: 36%;
+    font-size: 15px
 }
