@@ -25,13 +25,16 @@ const AssignmentPage: React.FC = () => {
 
     const AssignmentIP = process.env.asnServiceIP || "localhost"; 
 
-    const [allAsn, setAllAsn] = useState<Array<asnData>>([sampleData]);
+    const [allAsn, setAllAsn] = useState<Array<asnData>>([]);
     const [isAdding, setAdding] = useState(false);
     const [checked, setChecked] = useState(false);
     const [editingAsn, setEditingAsn] = useState<asnData | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filtered, setFiltered] = useState<Array<asnData>>([]);
     const [isEmpty, setEmpty] = useState(false);
+    const [sortBy, setSortBy] = useState<string>('Name');
+    const [showMemo, setShowMemo] = useState<string | null>(null); // Track which memo to show
+
     const handleChangeSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
@@ -41,6 +44,9 @@ const AssignmentPage: React.FC = () => {
         const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
         if(response.data.result.length<1){
             setEmpty(true);
+        }
+        else{
+            setEmpty(false);
         }
         setAllAsn(response.data.result);
     };
@@ -52,7 +58,12 @@ const AssignmentPage: React.FC = () => {
 
     useEffect(() => {
         const filteredList = filtered.filter(item => {
+            if(searchTerm!==""){
             return item.title.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+        else{
+            return item.title
+        }
         });
         setAllAsn(filteredList);
     }, [searchTerm]); 
@@ -66,29 +77,63 @@ const AssignmentPage: React.FC = () => {
     }
 
     const handleCheck = async (item: asnData) => {
+        try {
         item.done = !item.done;
         setChecked(item.done)
-        await axios.put(`http://${AssignmentIP}:3002/assignments/update/${item._id}`, { item });
-        setAllAsn((await axios.get(`/assignments`)).data.result)
+        await axios.put(`http://${AssignmentIP}:3002/assignments/update/${item._id}`, { item:item });
+        const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${item.uid}`);
+        setAllAsn(response.data.result);
         setChecked(!checked)
+    } catch (error: any) {
+        console.error(`Failed to check the assignment: ${error.message}`);
+    }
 
     };
     const handleEdit = (item: asnData) => {
         setEditingAsn(item);
     };
 
+    const handleToggleMemo = (itemId: string) => {
+        setShowMemo(showMemo === itemId ? null : itemId); 
+    };
+    
     const handleSubmitEdit = async (editedAsn: asnData) => {
         try {
             await axios.put(`http://${AssignmentIP}:3002/assignments/update/${editedAsn._id}`, { item: editedAsn });
-            // Fetch updated assignment list
             const uid = localStorage.getItem('uid');
             const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
             setAllAsn(response.data.result);
-            setEditingAsn(null); // Close edit form after successful edit
+            setEditingAsn(null); 
         } catch (error: any) {
             console.error("Error editing assignment:", error.message);
         }
     };
+
+
+    const sortAssignments = (criteria: string) => {
+        let sortedList = [...allAsn];
+
+        switch (criteria) {
+            case 'Name':
+                sortedList.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'Date':
+                sortedList.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+                break;
+            case 'Tag':
+                sortedList.sort((a, b) => a.tag.localeCompare(b.tag));
+                break;
+            default:
+                break;
+        }
+
+        setAllAsn(sortedList);
+    };
+
+    useEffect(() => {
+        sortAssignments(sortBy);
+    }, [sortBy]);
+
 
     const handleSubmitAdd = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -108,6 +153,7 @@ const AssignmentPage: React.FC = () => {
         const response = await axios.get(`http://${AssignmentIP}:3002/assignments/users/${uid}`);
         setAllAsn(response.data.result);
         setAdding(false);
+        updateList();
     }
 
     const renderEditForm = () => {
@@ -143,10 +189,10 @@ const AssignmentPage: React.FC = () => {
                 <div className='header-wrapper'>
                     <h2>ASSIGNMENT TRACKER</h2>
                     <label>sort by...</label>
-                    <select className='sort-by'>
-                        <option>Name</option>
-                        <option>Date</option>
-                        <option>Tag</option>
+                    <select className='sort-by' value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="Name">Name</option>
+                        <option value="Date">Date</option>
+                        <option value="Tag">Tag</option>
                     </select>
                     <form>
                         <input
@@ -179,16 +225,16 @@ const AssignmentPage: React.FC = () => {
                             <div key={key} className='asn-list-item'>
                                 <input
                                     type="checkbox"
-                                    checked={checked}
-                                    onChange={(e) => handleCheck(item)}
+                                    checked={item.done}
+                                    onChange={() => handleCheck(item)}
                                 />
                                 <div>{String(item.title)}</div>
                                 <div>{item.dueDate}</div>
                                 <div>{String(item.tag)}</div>
                                 <button onClick={() => handleEdit(item)}>EDIT</button>
-                                <button>MEMO</button>
+                                <button onClick={() => handleToggleMemo(item._id)}>MEMO</button>
                                 <button type="button" onClick={() => handleDelete(item._id)}>X</button>
-                                <div className='asn-memo'>{String(item.memo)}</div>
+                                {showMemo === item._id && <div className='asn-memo'>{String(item.memo)}</div>} 
                             </div>
                         ))
                     }
