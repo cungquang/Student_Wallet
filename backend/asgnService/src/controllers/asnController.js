@@ -21,10 +21,7 @@ const getUserAsnAll = async (req, res) => {
         const result = await db.collection('assignments').find({ uid }).toArray();
 
         if (result.length === 0) {
-            const sampleData = [{
-                _id: "1", uid, title: "372Asn", done: false, subject: "CMPT 372",
-                dueDate: new Date().toISOString().slice(0, 10), tag: "#Urgent", memo: "Blah Blah"
-            }];
+            const sampleData = [];
             res.status(200).json({ result: sampleData }); 
         } else {
             res.status(200).json({ result });
