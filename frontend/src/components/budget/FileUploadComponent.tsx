@@ -3,12 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 //Configure URL
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
-
-const AI_SERVICE_URL = 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
-const UPLOAD_FILE_URL = `http://${UPLOAD_SERVICE_IP}/api/file/upload`;
-const UPLOAD_GETSIGNEDURL_URL = `http://${UPLOAD_SERVICE_IP}/api/file/getsignedurl`;
-const UPLOAD_METADATA_URL = `http://${UPLOAD_SERVICE_IP}/api/fileMetadata/insertRecord`;
+//const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
 
 function combineItems(data: Record<string, any>, prefix = 'item', maxItems = Infinity) {
   const items = [];
@@ -27,9 +22,10 @@ function combineItems(data: Record<string, any>, prefix = 'item', maxItems = Inf
 }
 
 interface FileUploadProps {
+  byUser: string;
+  ai_service_ip: string
   uploadStatus: string;
   setUploadStatus: (value: string) => void;
-  setByUser: React.Dispatch<React.SetStateAction<string>>;
   setObjectName: React.Dispatch<React.SetStateAction<string>>;
   setByDate: React.Dispatch<React.SetStateAction<string>>;
   setByMerchant: React.Dispatch<React.SetStateAction<string>>;
@@ -38,10 +34,16 @@ interface FileUploadProps {
   setListOfItems: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploadStatus,
-  setByUser, setObjectName, setByDate, setByMerchant, setTotalCost, setTotalTax, setListOfItems }) => {
+const FileUploadComponent: React.FC<FileUploadProps> = ({ byUser, ai_service_ip, uploadStatus, setUploadStatus,
+  setObjectName, setByDate, setByMerchant, setTotalCost, setTotalTax, setListOfItems }) => {
   const [file, setFile] = useState<File | null>(null);
   const [filePath, setFilePath] = useState<string>('');
+
+  
+  const AI_SERVICE_URL = 'https://aiservicereadreceipt.azurewebsites.net/api/aiserviceextractreceipt';
+  const UPLOAD_FILE_URL = `http://${ai_service_ip}/api/file/upload`;
+  const UPLOAD_GETSIGNEDURL_URL = `http://${ai_service_ip}/api/file/getsignedurl`;
+  const UPLOAD_METADATA_URL = `http://${ai_service_ip}/api/fileMetadata/insertRecord`;
 
   //Function handle use select file
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,10 +60,7 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploa
     event.preventDefault();
     if (!file) return;
 
-    try {
-        //Get access token
-        const userId = localStorage.getItem('uid') || 'alex@test.com';
-        
+    try {        
         //Get file data
         const formData = new FormData();
         formData.append('file', file);
@@ -86,7 +85,7 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploa
 
         //Insert record of uploaded file into the database:
         const recordFile = {
-          userId: userId,
+          userId: byUser,
           objectName: objectName,
           createdDate: createdDate,
           lastModified: lastModified,
@@ -109,7 +108,6 @@ const FileUploadComponent: React.FC<FileUploadProps> = ({ uploadStatus, setUploa
           // await axios.put(UPDATE_RECEIPT_URL, { isRead: true, isReceipt: false });
 
           //Set data to the below form
-          setByUser(userId);
           setObjectName(objectName);
           
           if (receiptData.data) {

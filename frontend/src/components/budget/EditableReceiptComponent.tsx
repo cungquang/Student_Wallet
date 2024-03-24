@@ -2,15 +2,12 @@ import React, { ChangeEvent, useState } from 'react';
 import EditTextBoxComponent from './EditableComponent';
 import axios from 'axios';
 
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.3.104';
-
-const FINANCE_SERVICE_URL = `http://${UPLOAD_SERVICE_IP}/api/finance/insertReceiptRecord`;
-
 //Style
 const BoxStyle = { width: '65%', height: '20px' };
 const ListStyle = { width: '65%', height: '180px' };
 
 interface EditableReceiptComponentsProps {
+    upload_service_ip: string;
     objectName: string;
     byUser: string;
     byDate: string;
@@ -18,7 +15,6 @@ interface EditableReceiptComponentsProps {
     totalCost: string;
     totalTax: string;
     listOfItems: string;
-    setByUser: React.Dispatch<React.SetStateAction<string>>;
     setByDate: React.Dispatch<React.SetStateAction<string>>;
     setByMerchant: React.Dispatch<React.SetStateAction<string>>;
     setTotalCost: React.Dispatch<React.SetStateAction<string>>;
@@ -32,10 +28,11 @@ interface EditableReceiptComponentsProps {
     handleListOfPurchasedItems: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const EditableReceiptComponent: React.FC<EditableReceiptComponentsProps> = ({ objectName, byUser, byDate, byMerchant, totalCost, totalTax, listOfItems,
-    setByUser, setByDate, setByMerchant, setTotalCost, setTotalTax, setListOfItems, setUploadStatus,
+const EditableReceiptComponent: React.FC<EditableReceiptComponentsProps> = ({ upload_service_ip, objectName, byUser, byDate, byMerchant, totalCost, totalTax, listOfItems,
+    setByDate, setByMerchant, setTotalCost, setTotalTax, setListOfItems, setUploadStatus,
     handleTransactionDate, handleMerchantName, handleTotalCost, handleTotalTax, handleListOfPurchasedItems }) => {
     const [updateStatus, setUpdateStatus] = useState("");
+    const FINANCE_SERVICE_URL = `http://${upload_service_ip}/api/finance/insertReceiptRecord`;
 
     const handleUpdate: React.FormEventHandler<HTMLFormElement> = async (event) => {  
         try {
@@ -47,8 +44,8 @@ const EditableReceiptComponent: React.FC<EditableReceiptComponentsProps> = ({ ob
                 createdDate: byDate,
                 lastModified: byDate,
                 merchantName: byMerchant,
-                totalCost: totalCost,
-                totalTax: totalTax,
+                totalCost: Number(totalCost),
+                totalTax: Number(totalTax),
                 receiptLine: JSON.parse(listOfItems)
             };
 
@@ -64,7 +61,6 @@ const EditableReceiptComponent: React.FC<EditableReceiptComponentsProps> = ({ ob
                 setUploadStatus('');
 
                 // Reset form fields
-                setByUser('');
                 setByDate('');
                 setByMerchant('');
                 setTotalCost('');
