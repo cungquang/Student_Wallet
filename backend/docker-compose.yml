@@ -1,5 +1,15 @@
 version: "3.8"
 services:
+  authservice:
+    build:
+      context: ./authService
+      dockerfile: Dockerfile
+    container_name: unikeep_authservice
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - unikeep_mongodb
+    
   unikeep_uploadservice:
     build:
         context: ./uploadService
@@ -14,18 +24,18 @@ services:
     depends_on:
       - unikeep_mongodb
 
-  # unikeep_asnservice:
-  #   build:
-  #       context: ./asgnService
-  #       dockerfile: Dockerfile
-  #   container_name: unikeep_asnservice
-  #   # image: 
-  #   ports:
-  #     - "3003:3003"
-  #   environment:
-  #     PORT: 3003
-  #   depends_on:
-  #     - unikeep_mongodb
+  unikeep_asnservice:
+    build:
+        context: ./asgnService
+        dockerfile: Dockerfile
+    container_name: unikeep_asnservice
+    # image: 
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+    depends_on:
+      - unikeep_mongodb
 
   unikeep_mongodb:
     container_name: mongoDB372

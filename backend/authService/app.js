@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, './build')));
 
-const PORT =3000;
+const PORT = 3000;
 // POST: Sign in
 app.post('/signin', signInUser);
 
