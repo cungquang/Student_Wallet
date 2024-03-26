@@ -34,6 +34,7 @@ services:
       - "3002:3002"
     environment:
       PORT: 3002
+      MONGODB_URI: mongodb://mongoDB372:27017
     depends_on:
       - unikeep_mongodb
 
