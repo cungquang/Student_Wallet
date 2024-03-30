@@ -1,4 +1,6 @@
 const { getAuth, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, createUserWithEmailAndPassword } = require("firebase/auth");
+
+
 const { initializeApp } = require("firebase/app");
 const firebaseConfig = {
     apiKey: "AIzaSyDI26Bw2RZkbNJp-U77lA3v_fX_Wou_hWQ",
@@ -33,6 +35,8 @@ async function signInUser(req, res) {
         res.status(500).json({ error: `Sign in error: ${error.message}` });
     }
 }
+
+
 
 // POST: Sign up
 

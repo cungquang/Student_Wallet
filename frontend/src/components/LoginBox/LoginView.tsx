@@ -2,9 +2,19 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-const authport = 3005;
-
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+const firebaseConfig = {
+    apiKey: "AIzaSyDI26Bw2RZkbNJp-U77lA3v_fX_Wou_hWQ",
+    authDomain: "jooeunpark301414492.firebaseapp.com",
+    projectId: "jooeunpark301414492",
+    storageBucket: "jooeunpark301414492.appspot.com",
+    messagingSenderId: "119117724944",
+    appId: "1:119117724944:web:b7d3637b1b0199b8e73995"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -254,6 +264,62 @@ const LoginView: React.FC = () => {
         setMessage(Message);
     };
 
+    const handleSignInWithGoogle = async () => {
+        setSignupMSG(true);
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider); 
+            const user = result.user;
+
+            if (user) {
+                const idToken = await user.getIdToken();
+                localStorage.setItem('accessToken', idToken); 
+                
+                verifyToken(idToken); 
+                
+                setMessage('Login successful');
+                console.log(`UID: ${user.uid}`);
+            }
+        } catch (error) {
+            console.log(error);
+            setMessage('Login failed');
+            setIsCredValid(false);
+        }
+    };
+
+    
+    const handleSignUpWithGoogle = async () => {
+        setSignupMSG(true);
+        let Message = '';
+
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            if (user) {
+                const idToken = await user.getIdToken();
+
+                const response = await axios.post(`/signupWithGoogle`, { idToken });
+                if (response && response.data) {
+                    setMessage(response.data.message);
+                    Message = 'Sign up successful, you can log in now';
+                    setSignupMSG(false);
+                } else {
+                    Message = 'Unexpected response format';
+                    setSignupMSG(false);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            Message = 'Unable to sign up with Google';
+            setSignupMSG(false);
+        }
+
+        setMessage(Message);
+    };
+
+
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -298,7 +364,7 @@ const LoginView: React.FC = () => {
                     {isLogin ? 'Log In' : 'Sign Up'}
                 </LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
-                <LoginButton>
+                <LoginButton onClick={isLogin? handleSignInWithGoogle:handleSignUpWithGoogle}>
                     {isLogin ?  'Log In With Google' :'Sign Up With Google'}
                 </LoginButton>
                 <Line />
