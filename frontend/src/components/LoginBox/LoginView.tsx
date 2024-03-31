@@ -164,7 +164,7 @@ const LoginView: React.FC = () => {
         }
     }, []);
 
-    
+
     const verifyToken = async (accessToken: string) => {
         try {
             const verifyRes = await axios.get(`/check-user`, {
@@ -172,13 +172,13 @@ const LoginView: React.FC = () => {
                     authorization: `Bearer ${accessToken}`
                 }
             });
-    
+
             console.log("Verification response: ", verifyRes);
             try {
                 const response = await axios.post(`/decode-token`, { accessToken: accessToken });
-    
+
                 const userInfo = response.data.decodedToken;
-    
+
                 const userRes = await axios.get(`/check-user`, {
                     headers: {
                         authorization: `Bearer ${accessToken}`
@@ -189,12 +189,12 @@ const LoginView: React.FC = () => {
                 setIsLogin(true);
                 setIsCredValid(true);
                 SwitchPage('/selection');
-    
+
             } catch (error) {
                 console.error('Error decoding token:', error);
             }
         }
-        catch (error:any) {
+        catch (error: any) {
             console.error('Error verifying token: ', error);
             if (error.response === 401) {
                 // Token expired, redirect to login screen
@@ -204,18 +204,18 @@ const LoginView: React.FC = () => {
             }
         }
     }
-    
+
 
     const handleSignIn = async () => {
         setSignupMSG(true);
         try {
             const response = await axios.post(`/signin`, { email, password });
-            console.log(`UID: ${response.data.user.uid}`); 
-    
+            console.log(`UID: ${response.data.user.uid}`);
+
             // Do the second request after UID is obtained
             const accessToken = response.data.idToken;
             localStorage.setItem('accessToken', accessToken);
-            
+
             verifyToken(accessToken);
         } catch (error: any) {
             setMessage(error.response.data.error);
@@ -259,39 +259,15 @@ const LoginView: React.FC = () => {
                 Message = 'Unable to sign up';
             }
         }
-        
+
         // Set the errorMessage to be displayed in InvalidText component
         setMessage(Message);
     };
 
+
+
     const handleSignInWithGoogle = async () => {
         setSignupMSG(true);
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider); 
-            const user = result.user;
-
-            if (user) {
-                const idToken = await user.getIdToken();
-                localStorage.setItem('accessToken', idToken); 
-                
-                verifyToken(idToken); 
-                
-                setMessage('Login successful');
-                console.log(`UID: ${user.uid}`);
-            }
-        } catch (error) {
-            console.log(error);
-            setMessage('Login failed');
-            setIsCredValid(false);
-        }
-    };
-
-    
-    const handleSignUpWithGoogle = async () => {
-        setSignupMSG(true);
-        let Message = '';
-
         try {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth, provider);
@@ -299,26 +275,20 @@ const LoginView: React.FC = () => {
 
             if (user) {
                 const idToken = await user.getIdToken();
+                localStorage.setItem('accessToken', idToken);
 
-                const response = await axios.post(`/signupWithGoogle`, { idToken });
-                if (response && response.data) {
-                    setMessage(response.data.message);
-                    Message = 'Sign up successful, you can log in now';
-                    setSignupMSG(false);
-                } else {
-                    Message = 'Unexpected response format';
-                    setSignupMSG(false);
-                }
+                verifyToken(idToken);
+
+                setMessage('Login successful');
+                console.log(`UID: ${user.uid}`);
+
             }
         } catch (error) {
-            console.error(error);
-            Message = 'Unable to sign up with Google';
-            setSignupMSG(false);
+            console.log(error);
+            setMessage('Login failed');
+            setIsCredValid(false);
         }
-
-        setMessage(Message);
     };
-
 
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -337,19 +307,19 @@ const LoginView: React.FC = () => {
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword); // Toggle password visibility
-    };  
-    
+    };
+
     return (
         <div>
             <Wrapper>
                 <Heading>UniKeep</Heading>
                 <TextField type="text" placeholder="Email" value={email} onChange={handleEmailChange} />
                 <PasswordWrapper>
-                    <PasswordTextField 
+                    <PasswordTextField
                         type={showPassword ? "text" : "password"} // Set the type based on showPassword state
-                        placeholder="Password" 
-                        value={password} 
-                        onChange={handlePasswordChange} 
+                        placeholder="Password"
+                        value={password}
+                        onChange={handlePasswordChange}
                     />
                     <PasswordToggleButton onClick={handleTogglePassword}>
                         {showPassword ? "Hide" : "Show"}
@@ -364,8 +334,8 @@ const LoginView: React.FC = () => {
                     {isLogin ? 'Log In' : 'Sign Up'}
                 </LoginButton>
                 <div style={{ margin: '20px', fontSize: '20px', fontFamily: 'Inika' }}>OR</div>
-                <LoginButton onClick={isLogin? handleSignInWithGoogle:handleSignUpWithGoogle}>
-                    {isLogin ?  'Log In With Google' :'Sign Up With Google'}
+                <LoginButton onClick={handleSignInWithGoogle}>
+                    {isLogin ? 'Log In With Google' : 'Sign Up With Google'}
                 </LoginButton>
                 <Line />
                 <ViewChange>

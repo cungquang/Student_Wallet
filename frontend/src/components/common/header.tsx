@@ -63,6 +63,14 @@ const Header: React.FC = () => {
         navigate('/selection');
     };
 
+    const handleLogout = () =>{
+        const isConfirmed = window.confirm('Do you wanna logout?');
+        if (isConfirmed) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('uid');
+        navigate('/');
+        }
+    }
     return (
         <div>
             <HeaderWrapper>
@@ -73,7 +81,7 @@ const Header: React.FC = () => {
                     <AppName onClick={handleAppNameClick}>UniKeep</AppName>
                 </NameWrapper>
                 <SideWrapper>
-                    <Profile />
+                    <Profile onClick={handleLogout} />
                 </SideWrapper>
             </HeaderWrapper>
         </div>
