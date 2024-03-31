@@ -1,6 +1,4 @@
 const express = require('express');
-const { initializeApp } = require("firebase/app");
-const { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword } = require("firebase/auth");
 const bodyParser = require('body-parser');
 const firebase_admin = require("firebase-admin")
 const serviceAccount = require("./src/controllers/cloudKey.json");
@@ -8,9 +6,13 @@ const  { signInUser, signUpUser, getUserByUID, getAllUsers, decodeTokenHandler, 
 const cors = require('cors');
 const path = require('path');
 const app = express();
-
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
+  next();
+});
 app.use(cors());
 app.use(bodyParser.json());
+
 
 app.use(express.static(path.join(__dirname, './build')));
 

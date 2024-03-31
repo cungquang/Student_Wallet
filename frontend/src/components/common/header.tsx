@@ -71,6 +71,8 @@ const Header: React.FC = () => {
         navigate('/');
         }
     }
+
+    const username = localStorage.getItem('email')?.split("@")[0];
     return (
         <div>
             <HeaderWrapper>
@@ -81,6 +83,7 @@ const Header: React.FC = () => {
                     <AppName onClick={handleAppNameClick}>UniKeep</AppName>
                 </NameWrapper>
                 <SideWrapper>
+                    <h2 style={{marginRight: "10px"}}>{username} </h2>
                     <Profile onClick={handleLogout} />
                 </SideWrapper>
             </HeaderWrapper>

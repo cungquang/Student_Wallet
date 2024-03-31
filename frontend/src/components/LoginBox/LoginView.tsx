@@ -185,6 +185,7 @@ const LoginView: React.FC = () => {
                     }
                 });
                 localStorage.setItem('uid', userInfo.uid);
+                localStorage.setItem('email', userInfo.email);
                 setMessage(`Hello ${userInfo.email} -- verified`);
                 setIsLogin(true);
                 setIsCredValid(true);
