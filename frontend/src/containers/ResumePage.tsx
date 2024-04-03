@@ -56,10 +56,11 @@ const ResumePage: React.FC = () => {
 
     const handleSubmitButtonClick = async () => {
         if (fileToUpload){
-            const formData = new FormData();
-            formData.append('resume', fileToUpload);
-            const response = await axios.post(`http://${ResumeIP}:3003/upload`, formData);
-            console.log(response.data);
+            // const formData = new FormData();
+            // formData.append('resume', fileToUpload);
+            // const response = await axios.post(`http://${ResumeIP}:3003/upload`, formData);
+            // console.log(response.data);
+            navigate('/resumeresult');
         }
         else{
             alert("Upload your resume first!");
@@ -69,16 +70,16 @@ const ResumePage: React.FC = () => {
     return (
         <div>
             <Header />
+            <h1>Resume Assessment</h1>
             <Wrapper>
-                <h1>Resume Assessment</h1>
                 <UploadBox width={750} height={250} onFileUpload={handleFileUpload} children={"Upload Your PDF Resume"}/>
                 <EnterWrapper width={770} height={100}>
-                <Button onClick={handleBackButtonClick} width={150} height={50} color={"#D6F9EC"}>
-                    Back
-                </Button>
-                <Button onClick={handleSubmitButtonClick} width={150} height={50} color={"#D6F9EC"}>
-                    Submit
-                </Button>
+                    <Button onClick={handleBackButtonClick} width={150} height={50} color={"#D6F9EC"}>
+                        Back
+                    </Button>
+                    <Button onClick={handleSubmitButtonClick} width={150} height={50} color={"#D6F9EC"}>
+                        Submit
+                    </Button>
                 </EnterWrapper>
             </Wrapper>
             <Footer />

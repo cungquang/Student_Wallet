@@ -21,7 +21,7 @@ const uploadResume = async (req, res) => {
                 const tokens = await preprocessPDF(filePath);
                 const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
                 console.log('Suitable jobs:', jobs);
-                return res.status(200).send("File uploaded & processed successfully.");
+                return res.status(200).send(jobs);
             } catch (error) {
                 console.error('Error processing resume:', error);
                 return res.status(500).send('Error processing resume.');
