@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
-import UploadBox from '../components/UploadBox';
+import UploadBox from '../components/resume/UploadBox';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Wrapper = styled.div`
     display: flex;
@@ -40,9 +41,9 @@ const Button = styled.label<{ width: number; height: number; color: string }>`
 `;
 
 const ResumePage: React.FC = () => {
-    const [fileToUpload, setFileToUpload] = useState<File | null>(null);
-    // const { evaluateResume } = useResumeApi();
+    const ResumeIP = process.env.resumeServiceIP || "localhost"; 
 
+    const [fileToUpload, setFileToUpload] = useState<File | null>(null);
     const navigate = useNavigate();
 
     const handleFileUpload = (file: File) => {
@@ -53,10 +54,12 @@ const ResumePage: React.FC = () => {
         navigate('/selection');
     };
 
-    const handleSubmitButtonClick = () => {
+    const handleSubmitButtonClick = async () => {
         if (fileToUpload){
-            console.log(fileToUpload);
-            navigate('result');
+            const formData = new FormData();
+            formData.append('resume', fileToUpload);
+            const response = await axios.post(`http://${ResumeIP}:3003/upload`, formData);
+            console.log(response.data);
         }
         else{
             alert("Upload your resume first!");

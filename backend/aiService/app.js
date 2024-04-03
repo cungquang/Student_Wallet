@@ -1,26 +1,44 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const routes_1 = __importDefault(require("./src/routes"));
-const app = (0, express_1.default)();
+const express = require('express');
+const cors = require('cors');
+const { dbConnection } = require('./db');
+const { uploadResume } = require('./src/controllers/resumeController');
+const fileUpload = require('express-fileupload');
 
-//Get PORT number at run time from environment variable
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(fileUpload());
 
-//Middleware
-app.use(express_1.default.json());
-
-//Call API execution
-app.use('/api', routes_1.default);
-
-//Error handling middleware
-app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send('Internal error');
+app.get('/', (req, res) => {
+  res.send('Server is running and reachable!');
 });
-app.listen(PORT, () => {
-    console.log('Server listening on the port ' + PORT);
+
+// store uploded file (including preprocessing)
+app.post('/upload', uploadResume);
+
+//------ SERVER -------//
+app.listen(3003, () => {
+  console.log('Server is running on port 3003');
 });
+
+
+// dbConnection()
+// .then(()=>{
+//   app.get('/', (req, res) => {
+//     res.send('Server is running and reachable!');
+//   });
+//   //------ GET -------//
+
+//   // Get all assignments
+//   app.get('/resumes', getResumeAll);
+
+//   //------ SERVER -------//
+//   app.listen(3003, () =>{
+//   console.log('Server is running on port 3003');
+//   })
+// })
+
+// .catch(error=>{
+//   console.error('Error connecting to database:', error);
+//   process.exit(1);
+// })
