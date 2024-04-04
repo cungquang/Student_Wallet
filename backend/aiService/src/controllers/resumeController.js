@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const path = require('path');
 const { getJobs } = require('./chatGptController');
+const fs = require('fs');
 
 const getResumeAll = async (req, res) =>{
     try{
@@ -40,22 +41,18 @@ const getThisResume = async (req, res) =>{
     }
 };
 
-
-const createResume= async (req, res) =>{
-    try{
+const createResume = async (req) => {
+    try {
         const db = getDB();
-        const newData = {...req.body};
+        const newData = { ...req.body };
         newData._id = new ObjectId().toHexString();
         newData.uid = req.params.uid;
         await db.collection('resumes').insertOne(newData);
-        res.status(201).json({message: "Insert success"});
-    } catch (error){
+    } catch (error) {
         console.log(error.message);
-        res.status(400).json({
-            message: ("Error while creating the resume: ", error.message)
-        })
+        throw error;
     }
-}
+};
 
 const deleteResume = async(req, res) =>{
     try{
@@ -80,9 +77,27 @@ const uploadResume = async (req, res) => {
             }
             try {
                 const tokens = await preprocessPDF(filePath);
-                const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
-                console.log('Suitable jobs:', jobs);
-                return res.status(200).send(jobs);
+                // const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
+                const jobs = "this is the test token";
+                const uid = "this is the test uid"
+                await createResume({
+                    body: {
+                        jobs: jobs
+                    },
+                    params: {
+                        uid: uid
+                    }
+                });
+
+                // Remove the file after processing
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error('Error removing file:', err);
+                    } else {
+                        console.log('File removed:', filePath);
+                    }
+                });
+                return res.status(200).send("Successfully uploaded/processed resume.");
             } catch (error) {
                 console.error('Error processing resume:', error);
                 return res.status(500).send('Error processing resume.');

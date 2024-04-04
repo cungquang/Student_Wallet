@@ -24,9 +24,6 @@ dbConnection()
   // Get specific resume data details
   app.get('/resumes/:_id', getThisResume);
 
-  //------ POST -------//
-  app.post('/resumes/add/:uid', createResume);
-
   //------ DELETE -------//
   app.delete('/resumes/delete/:_id', deleteResume);
 
