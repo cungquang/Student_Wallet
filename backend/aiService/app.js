@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('./db');
-const { uploadResume } = require('./src/controllers/resumeController');
+const { uploadResume, getResumeAll, getUserResumeAll, getThisResume, createResume, deleteResume } = require('./src/controllers/resumeController');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -17,19 +17,18 @@ dbConnection()
 
   // Get all resume data
   app.get('/resumes', getResumeAll)
+
   // Get all resume data for a specific user
-  app.get('/resumes/users/:uid', getUserResumeAll)
+  app.get('/resumes/user/:uid', getUserResumeAll)
+
+  // Get specific resume data details
+  app.get('/resumes/:_id', getThisResume);
 
   //------ POST -------//
   app.post('/resumes/add/:uid', createResume);
 
-
   //------ DELETE -------//
   app.delete('/resumes/delete/:_id', deleteResume);
-  
-
-    //------ UPDATE -------//
-  app.put('/assignments/update/:_id', updateAsn);
 
   // store uploded file (including preprocessing)
   app.post('/upload', uploadResume);
@@ -38,4 +37,8 @@ dbConnection()
   app.listen(3003, () => {
     console.log('Server is running on port 3003');
   });
+})
+.catch(error=>{
+  console.error('Error connecting to database:', error);
+  process.exit(1);
 });

@@ -8,13 +8,66 @@ const getResumeAll = async (req, res) =>{
     try{
         const db = getDB();
         const result = await db.collection('resumes').find().toArray();
-        res.status(200).json({result: result, message: "got all resumes"});
+        res.status(200).json({result: result});
     } catch (error){
         res.status(400).json({
             message: ("Error while retrieving resumes: ", error.message)
         })
     }
 }
+
+const getUserResumeAll = async (req, res) =>{
+    try{
+        const db = getDB();
+        const result = await db.collection('resumes').find({uid: req.params.uid}).toArray();
+        res.status(200).json({result: result});
+    } catch (error){
+        res.status(400).json({
+            message: ("Error while retrieving resumes for this user: ", error.message)
+        })
+    }
+}
+
+const getThisResume = async (req, res) =>{
+    try{
+        const db = getDB();
+        const result = await db.collection('resumes').findOne({_id: req.params._id});
+        res.status(200).json({result: result});
+    } catch (error){
+        res.status(400).json({
+            message: ("Error while retrieving this resume: ", error.message)
+        })
+    }
+};
+
+
+const createResume= async (req, res) =>{
+    try{
+        const db = getDB();
+        const newData = {...req.body};
+        newData._id = new ObjectId().toHexString();
+        newData.uid = req.params.uid;
+        await db.collection('resumes').insertOne(newData);
+        res.status(201).json({message: "Insert success"});
+    } catch (error){
+        console.log(error.message);
+        res.status(400).json({
+            message: ("Error while creating the resume: ", error.message)
+        })
+    }
+}
+
+const deleteResume = async(req, res) =>{
+    try{
+        const db = getDB();
+        await db.collection('resumes').deleteOne({ _id: req.params._id });
+        res.status(201).json({message: "Resume deleted: " + req.params._id});
+    } catch (error){
+        res.status(400).json({
+            message: ("Error while deleting the resume: ", error.message)
+        })
+}}
+
 
 const uploadResume = async (req, res) => {
     try {
@@ -25,10 +78,6 @@ const uploadResume = async (req, res) => {
                 console.error(err);
                 return res.status(500).send('Failed to upload file.');
             }
-            // Implement the code to communicate with chatgpt
-            // make each process a separate function
-            // 1. send the tokens to chatgpt (ask chatGPT to generate a list of 5 most suitable jobs for this resume tokens(only job titles))
-            // 2. receive the response from chatgpt ( ex) const jobs = await getJobs(tokens); getJobs is the function that you will implement)
             try {
                 const tokens = await preprocessPDF(filePath);
                 const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
@@ -90,5 +139,9 @@ const preprocessPDF = async (pdfFilePath) => {
 
 module.exports = {
     getResumeAll,
+    getUserResumeAll,
+    getThisResume,
+    createResume,
+    deleteResume,
     uploadResume
 }
