@@ -9,36 +9,33 @@ app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
 
-app.get('/', (req, res) => {
-  res.send('Server is running and reachable!');
+dbConnection()
+.then(()=>{
+  app.get('/', (req, res) => {
+    res.send('Server is running and reachable!');
+  });
+
+  // Get all resume data
+  app.get('/resumes', getResumeAll)
+  // Get all resume data for a specific user
+  app.get('/resumes/users/:uid', getUserResumeAll)
+
+  //------ POST -------//
+  app.post('/resumes/add/:uid', createResume);
+
+
+  //------ DELETE -------//
+  app.delete('/resumes/delete/:_id', deleteResume);
+  
+
+    //------ UPDATE -------//
+  app.put('/assignments/update/:_id', updateAsn);
+
+  // store uploded file (including preprocessing)
+  app.post('/upload', uploadResume);
+
+  //------ SERVER -------//
+  app.listen(3003, () => {
+    console.log('Server is running on port 3003');
+  });
 });
-
-// store uploded file (including preprocessing)
-app.post('/upload', uploadResume);
-
-//------ SERVER -------//
-app.listen(3003, () => {
-  console.log('Server is running on port 3003');
-});
-
-
-// dbConnection()
-// .then(()=>{
-//   app.get('/', (req, res) => {
-//     res.send('Server is running and reachable!');
-//   });
-//   //------ GET -------//
-
-//   // Get all assignments
-//   app.get('/resumes', getResumeAll);
-
-//   //------ SERVER -------//
-//   app.listen(3003, () =>{
-//   console.log('Server is running on port 3003');
-//   })
-// })
-
-// .catch(error=>{
-//   console.error('Error connecting to database:', error);
-//   process.exit(1);
-// })

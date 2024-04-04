@@ -4,6 +4,18 @@ const { ObjectId } = require('mongodb');
 const path = require('path');
 const { getJobs } = require('./chatGptController');
 
+const getResumeAll = async (req, res) =>{
+    try{
+        const db = getDB();
+        const result = await db.collection('resumes').find().toArray();
+        res.status(200).json({result: result, message: "got all resumes"});
+    } catch (error){
+        res.status(400).json({
+            message: ("Error while retrieving resumes: ", error.message)
+        })
+    }
+}
+
 const uploadResume = async (req, res) => {
     try {
         const file = req.files.resume; // data from the file upload input field
@@ -77,5 +89,6 @@ const preprocessPDF = async (pdfFilePath) => {
 }
 
 module.exports = {
+    getResumeAll,
     uploadResume
 }
