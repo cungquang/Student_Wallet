@@ -1,26 +1,47 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const routes_1 = __importDefault(require("./src/routes"));
-const app = (0, express_1.default)();
+const express = require('express');
+const cors = require('cors');
+const { dbConnection } = require('./db');
+const { uploadResume, getResumeAll, getUserResumeAll, getThisResumeJobs, getThisResumeFile, deleteResume } = require('./src/controllers/resumeController');
+const fileUpload = require('express-fileupload');
 
-//Get PORT number at run time from environment variable
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(fileUpload());
 
-//Middleware
-app.use(express_1.default.json());
+dbConnection()
+.then(()=>{
+  app.get('/', (req, res) => {
+    res.send('Server is running and reachable!');
+  });
 
-//Call API execution
-app.use('/api', routes_1.default);
+  //------ DB -------//
+  // Get all resume data
+  app.get('/resumes', getResumeAll) // not used for this project
 
-//Error handling middleware
-app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send('Internal error');
-});
-app.listen(PORT, () => {
-    console.log('Server listening on the port ' + PORT);
+  // Get all resume data for a specific user
+  app.get('/resumes/user/:uid', getUserResumeAll)
+
+  // Get recommened jobs for specific resume data 
+  app.get('/resumes/jobs/:_id', getThisResumeJobs);
+
+  // Get resume file for specific resume data 
+  app.get('/resumes/file/:_id', getThisResumeFile);
+
+  // Delete a specific resume data
+  app.delete('/resumes/delete/:_id', deleteResume);
+
+
+  //------ Backend -------//
+  // store uploded file (including preprocessing)
+  app.post('/upload/user/:uid', uploadResume);
+
+  //------ SERVER -------//
+  app.listen(3003, () => {
+    console.log('Server is running on port 3003');
+  });
+})
+.catch(error=>{
+  console.error('Error connecting to database:', error);
+  process.exit(1);
 });

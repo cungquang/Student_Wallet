@@ -1,5 +1,4 @@
-// UploadBox.tsx
-import React, { useState, useEffect  } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface UploadBoxProps {
@@ -31,17 +30,8 @@ const HiddenInput = styled.input`
 
 const UploadBox: React.FC<UploadBoxProps> = ({ width, height, onFileUpload, children }) => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [FileName, setFileName] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (FileName) {
-            setFileName(FileName);
-        } else {
-            setFileName(children);
-        }
-    }, [FileName, children]);
-
-
+    const [fileName, setFileName] = useState<string | null>(null);
+  
     const uploadFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -54,21 +44,21 @@ const UploadBox: React.FC<UploadBoxProps> = ({ width, height, onFileUpload, chil
             }
         }
     };
-
+  
     return (
-        <>
-            <UploadButton htmlFor="file-upload" width={width} height={height}>
-                {FileName ? FileName : children}
-            </UploadButton>
-            <HiddenInput
-                id="file-upload"
-                type="file"
-                accept=".pdf"
-                onChange={uploadFileHandler}
+    <>
+        <UploadButton htmlFor="file-upload" width={width} height={height}>
+            {fileName ? fileName : children}
+        </UploadButton>
+        <HiddenInput
+            id="file-upload"
+            type="file"
+            accept=".pdf"
+            onChange={uploadFileHandler}
             />
-            {errorMessage && <p>{errorMessage}</p>}
-        </>
+        {errorMessage && <p>{errorMessage}</p>}
+    </>
     );
 };
-
+  
 export default UploadBox;

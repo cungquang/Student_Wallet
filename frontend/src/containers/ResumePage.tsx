@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
-import UploadBox from '../components/UploadBox';
+import UploadBox from '../components/resume/UploadBox';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Wrapper = styled.div`
     display: flex;
@@ -40,9 +41,10 @@ const Button = styled.label<{ width: number; height: number; color: string }>`
 `;
 
 const ResumePage: React.FC = () => {
-    const [fileToUpload, setFileToUpload] = useState<File | null>(null);
-    // const { evaluateResume } = useResumeApi();
+    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost"; 
+    const uid = localStorage.getItem('uid');
 
+    const [fileToUpload, setFileToUpload] = useState<File | null>(null);
     const navigate = useNavigate();
 
     const handleFileUpload = (file: File) => {
@@ -53,10 +55,12 @@ const ResumePage: React.FC = () => {
         navigate('/selection');
     };
 
-    const handleSubmitButtonClick = () => {
+    const handleSubmitButtonClick = async () => {
         if (fileToUpload){
-            console.log(fileToUpload);
-            navigate('result');
+            const formData = new FormData();
+            formData.append('resume', fileToUpload);
+            const response = await axios.post(`http://${ResumeIP}:3003/upload/user/${uid}`, formData);
+            navigate('/resumeresult');
         }
         else{
             alert("Upload your resume first!");
@@ -66,16 +70,16 @@ const ResumePage: React.FC = () => {
     return (
         <div>
             <Header />
+            <h1>Resume Assessment</h1>
             <Wrapper>
-                <h1>Resume Assessment</h1>
                 <UploadBox width={750} height={250} onFileUpload={handleFileUpload} children={"Upload Your PDF Resume"}/>
                 <EnterWrapper width={770} height={100}>
-                <Button onClick={handleBackButtonClick} width={150} height={50} color={"#D6F9EC"}>
-                    Back
-                </Button>
-                <Button onClick={handleSubmitButtonClick} width={150} height={50} color={"#D6F9EC"}>
-                    Submit
-                </Button>
+                    <Button onClick={handleBackButtonClick} width={150} height={50} color={"#D6F9EC"}>
+                        Back
+                    </Button>
+                    <Button onClick={handleSubmitButtonClick} width={150} height={50} color={"#D6F9EC"}>
+                        Submit
+                    </Button>
                 </EnterWrapper>
             </Wrapper>
             <Footer />
