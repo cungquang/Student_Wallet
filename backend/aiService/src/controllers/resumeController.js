@@ -30,14 +30,35 @@ const getUserResumeAll = async (req, res) =>{
     }
 }
 
-const getThisResume = async (req, res) =>{
+const getThisResumeJobs = async (req, res) =>{
     try{
         const db = getDB();
         const result = await db.collection('resumes').findOne({_id: req.params._id});
-        res.status(200).json({result: result});
+        res.status(200).json({result: result.jobs});
     } catch (error){
         res.status(400).json({
             message: ("Error while retrieving this resume: ", error.message)
+        })
+    }
+};
+
+const getThisResumeFile = async (req, res) =>{
+    try{
+        const db = getDB();
+        const result = await db.collection('resumes').findOne({_id: req.params._id});
+        const bucket = new GridFSBucket(db);
+        const downloadStream = bucket.openDownloadStream(new ObjectId(result.resumeId));
+        
+        // Set response headers for PDF
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${result.fileName}"`);
+
+        // Pipe the PDF stream to response
+        downloadStream.pipe(res);
+
+    } catch (error){
+        res.status(400).json({
+            message: ("Error while retrieving this resume file: ", error.message)
         })
     }
 };
@@ -87,7 +108,6 @@ const deleteResume = async(req, res) =>{
         })
 }}
 
-
 const uploadResume = async (req, res) => {
     try {
         const file = req.files.resume; // data from the file upload input field
@@ -99,9 +119,9 @@ const uploadResume = async (req, res) => {
             }
             try {
                 const tokens = await preprocessPDF(filePath);
-                // const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
-                const jobs = "this is the test token";
-                const uid = "1234"
+                const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
+                // const jobs = "this is the test token";
+                const uid = req.params.uid;
                 await createResume({
                     body: {
                         jobs: jobs,
@@ -181,7 +201,8 @@ const preprocessPDF = async (pdfFilePath) => {
 module.exports = {
     getResumeAll,
     getUserResumeAll,
-    getThisResume,
+    getThisResumeJobs,
+    getThisResumeFile,
     createResume,
     deleteResume,
     uploadResume

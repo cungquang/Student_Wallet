@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('./db');
-const { uploadResume, getResumeAll, getUserResumeAll, getThisResume, createResume, deleteResume } = require('./src/controllers/resumeController');
+const { uploadResume, getResumeAll, getUserResumeAll, getThisResumeJobs, getThisResumeFile, deleteResume } = require('./src/controllers/resumeController');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -17,13 +17,16 @@ dbConnection()
 
   //------ DB -------//
   // Get all resume data
-  app.get('/resumes', getResumeAll)
+  app.get('/resumes', getResumeAll) // not used for this project
 
   // Get all resume data for a specific user
   app.get('/resumes/user/:uid', getUserResumeAll)
 
-  // Get specific resume data details
-  app.get('/resumes/:_id', getThisResume);
+  // Get recommened jobs for specific resume data 
+  app.get('/resumes/jobs/:_id', getThisResumeJobs);
+
+  // Get resume file for specific resume data 
+  app.get('/resumes/file/:_id', getThisResumeFile);
 
   // Delete a specific resume data
   app.delete('/resumes/delete/:_id', deleteResume);
@@ -31,10 +34,7 @@ dbConnection()
 
   //------ Backend -------//
   // store uploded file (including preprocessing)
-  app.post('/upload', uploadResume);
-
-  // delete uploaded file
-  
+  app.post('/upload/user/:uid', uploadResume);
 
   //------ SERVER -------//
   app.listen(3003, () => {

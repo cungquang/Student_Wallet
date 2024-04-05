@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-pdf/renderer": "^3.4.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,9 +15,11 @@
     "chart.js": "^4.4.2",
     "dotenv": "^16.4.5",
     "firebase": "^10.8.0",
+    "pdfjs-dist": "^4.0.379",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-pdf": "^7.7.1",
     "react-router-dom": "^6.22.2",
     "react-scripts": "^5.0.1",
     "styled-components": "^6.1.8",
@@ -48,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/pdfjs-dist": "^2.10.378",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.34"
   }

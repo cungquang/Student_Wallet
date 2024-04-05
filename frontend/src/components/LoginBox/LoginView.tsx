@@ -157,7 +157,7 @@ const LoginView: React.FC = () => {
     
     const verifyToken = async (accessToken: string) => {
         try {
-            const verifyRes = await axios.get(`/check-user`, {
+            const verifyRes = await axios.get(`http://localhost:3005/check-user`, {
                 headers: {
                     authorization: `Bearer ${accessToken}`
                 }
@@ -165,11 +165,11 @@ const LoginView: React.FC = () => {
     
             console.log("Verification response: ", verifyRes);
             try {
-                const response = await axios.post(`/decode-token`, { accessToken: accessToken });
+                const response = await axios.post(`http://localhost:3005/decode-token`, { accessToken: accessToken });
     
                 const userInfo = response.data.decodedToken;
     
-                const userRes = await axios.get(`/check-user`, {
+                const userRes = await axios.get(`http://localhost:3005/check-user`, {
                     headers: {
                         authorization: `Bearer ${accessToken}`
                     }
@@ -199,7 +199,7 @@ const LoginView: React.FC = () => {
     const handleSignIn = async () => {
         setSignupMSG(true);
         try {
-            const response = await axios.post(`/signin`, { email, password });
+            const response = await axios.post(`http://localhost:3005/signin`, { email, password });
             console.log(`UID: ${response.data.user.uid}`); 
     
             // Do the second request after UID is obtained
@@ -217,12 +217,12 @@ const LoginView: React.FC = () => {
         setSignupMSG(true);
         let Message = ''; // Initialize errorMessage variable
         try {
-            const response = await axios.post(`/signup`, { email, password });
+            const response = await axios.post(`http://localhost:3005/signup`, { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
                 const { uid, idToken } = response.data.user;
 
-                const userResponse = await axios.get(`/user/${uid}`, {
+                const userResponse = await axios.get(`http://localhost:3005/user/${uid}`, {
                     headers: {
                         authorization: `Bearer ${idToken}`
                     }

@@ -42,6 +42,7 @@ const Button = styled.label<{ width: number; height: number; color: string }>`
 
 const ResumePage: React.FC = () => {
     const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost"; 
+    const uid = localStorage.getItem('uid');
 
     const [fileToUpload, setFileToUpload] = useState<File | null>(null);
     const navigate = useNavigate();
@@ -58,8 +59,7 @@ const ResumePage: React.FC = () => {
         if (fileToUpload){
             const formData = new FormData();
             formData.append('resume', fileToUpload);
-            const response = await axios.post(`http://${ResumeIP}:3003/upload`, formData);
-            console.log(response.data);
+            const response = await axios.post(`http://${ResumeIP}:3003/upload/user/${uid}`, formData);
             navigate('/resumeresult');
         }
         else{
