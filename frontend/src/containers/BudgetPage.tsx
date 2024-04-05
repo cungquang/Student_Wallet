@@ -7,7 +7,7 @@ import EditableReceiptComponent from '../components/budget/EditableReceiptCompon
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
 
-const UPLOAD_SERVICE_IP = process.env.UPLOAD_SERVICE_API_IP || '34.130.175.43';
+const UPLOAD_SERVICE_IP = '34.130.83.40';
 
 const weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const monthLabels = ['Week1', 'Week2', 'Week3', 'Week4'];
@@ -200,6 +200,8 @@ const BudgetPage: React.FC = () => {
                             setTotalTax={setTotalTax}
                             setListOfItems={setListOfItems}
                         /> 
+                        
+                        It might take a few seconds for files to be read...
                     </div>
                     <div>
                         <hr style={{ width: '100%', margin: '10px 0' }} />

@@ -1,6 +1,4 @@
 const express = require('express');
-const { initializeApp } = require("firebase/app");
-const { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword } = require("firebase/auth");
 const bodyParser = require('body-parser');
 const firebase_admin = require("firebase-admin")
 const serviceAccount = require("./src/controllers/cloudKey.json");
@@ -9,8 +7,18 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 
+app.use(function (req, res, next) {
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  next();
+});
 app.use(cors());
 app.use(bodyParser.json());
+
 
 app.use(express.static(path.join(__dirname, './build')));
 
