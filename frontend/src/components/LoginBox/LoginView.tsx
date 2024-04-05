@@ -167,7 +167,7 @@ const LoginView: React.FC = () => {
 
     const verifyToken = async (accessToken: string) => {
         try {
-            const verifyRes = await axios.get(`http://localhost:3005/check-user`, {
+            const verifyRes = await axios.get(`/check-user`, {
                 headers: {
                     authorization: `Bearer ${accessToken}`
                 }
@@ -228,12 +228,12 @@ const LoginView: React.FC = () => {
         setSignupMSG(true);
         let Message = ''; // Initialize errorMessage variable
         try {
-            const response = await axios.post(`http://localhost:3005/signup`, { email, password });
+            const response = await axios.post(`/signup`, { email, password });
             if (response && response.data) {
                 setMessage(response.data.message);
                 const { uid, idToken } = response.data.user;
 
-                const userResponse = await axios.get(`http://localhost:3005/user/${uid}`, {
+                const userResponse = await axios.get(`/user/${uid}`, {
                     headers: {
                         authorization: `Bearer ${idToken}`
                     }
