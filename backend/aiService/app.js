@@ -15,6 +15,7 @@ dbConnection()
     res.send('Server is running and reachable!');
   });
 
+  //------ DB -------//
   // Get all resume data
   app.get('/resumes', getResumeAll)
 
@@ -24,11 +25,16 @@ dbConnection()
   // Get specific resume data details
   app.get('/resumes/:_id', getThisResume);
 
-  //------ DELETE -------//
+  // Delete a specific resume data
   app.delete('/resumes/delete/:_id', deleteResume);
 
+
+  //------ Backend -------//
   // store uploded file (including preprocessing)
   app.post('/upload', uploadResume);
+
+  // delete uploaded file
+  
 
   //------ SERVER -------//
   app.listen(3003, () => {

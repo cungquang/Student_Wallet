@@ -1,6 +1,7 @@
 const { getDB } = require('../../db');
 const { ObjectId } = require('mongodb');
-
+const { GridFSBucket } = require('mongodb');
+const streamifier = require('streamifier');
 const path = require('path');
 const { getJobs } = require('./chatGptController');
 const fs = require('fs');
@@ -47,6 +48,27 @@ const createResume = async (req) => {
         const newData = { ...req.body };
         newData._id = new ObjectId().toHexString();
         newData.uid = req.params.uid;
+
+        // Get file data
+        const file = req.files.resume;
+        const pdfBuffer = file.data;
+        const filename = file.name;
+
+        // Save PDF file to MongoDB using GridFS
+        const bucket = new GridFSBucket(db);
+        const uploadStream = bucket.openUploadStream(filename);
+        const fileId = uploadStream.id;
+        await new Promise((resolve, reject) => {
+            const stream = streamifier.createReadStream(pdfBuffer);
+            stream.pipe(uploadStream)
+                .on('error', reject)
+                .on('finish', resolve);
+        });
+
+        newData.resumeId = fileId;
+        newData.fileName = filename;
+        newData.createdAt = new Date();
+
         await db.collection('resumes').insertOne(newData);
     } catch (error) {
         console.log(error.message);
@@ -79,13 +101,16 @@ const uploadResume = async (req, res) => {
                 const tokens = await preprocessPDF(filePath);
                 // const jobs = await getJobs(tokens); // Get suitable jobs using ChatGPT
                 const jobs = "this is the test token";
-                const uid = "this is the test uid"
+                const uid = "1234"
                 await createResume({
                     body: {
-                        jobs: jobs
+                        jobs: jobs,
                     },
                     params: {
                         uid: uid
+                    },
+                    files: {
+                        resume: file,
                     }
                 });
 
@@ -93,6 +118,7 @@ const uploadResume = async (req, res) => {
                 fs.unlink(filePath, (err) => {
                     if (err) {
                         console.error('Error removing file:', err);
+
                     } else {
                         console.log('File removed:', filePath);
                     }
