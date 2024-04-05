@@ -17,10 +17,10 @@ COPY . .
 RUN npm run build
 
 # Make port 3000 available to the world outside this container
-EXPOSE 3000
+EXPOSE 3003
 
 # Define environment variable
-ENV PORT=3000
+ENV PORT=3003
 
 # Run the compiled JavaScript file when the container launches
 CMD ["node", "app.js"]
