@@ -1,4 +1,4 @@
-const mongodbhost = process.env.MONGODB_HOST || "127.0.0.1"; 
+const mongodbhost = process.env.MONGODB_HOST || "localhost"; 
 
 const MongoClient = require('mongodb').MongoClient;
 const url =`mongodb://${mongodbhost}:27017`
