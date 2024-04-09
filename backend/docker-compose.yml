@@ -38,6 +38,20 @@ services:
     depends_on:
       - unikeep_mongodb
 
+  unikeep_aiService:
+    build:
+        context: ./aiService
+        dockerfile: Dockerfile
+    container_name: unikeep_aiService
+    # image:
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      MONGODB_URI: mongodb://mongoDB372:27017
+    depends_on:
+      - unikeep_mongodb
+
   unikeep_mongodb:
     container_name: mongoDB372
     image: mongo:latest       # or specify a specific version like mongo:4.4
