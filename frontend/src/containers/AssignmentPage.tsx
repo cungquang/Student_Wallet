@@ -23,7 +23,7 @@ const AssignmentPage: React.FC = () => {
         dueDate: new Date().toISOString().slice(0, 10), tag: "#Urgent", memo: "Blah Blah"
     };
 
-    const AssignmentIP = process.env.ASN_SERVICE_IP || "localhost"; 
+    const AssignmentIP ="146.148.71.124"
 
     const [allAsn, setAllAsn] = useState<Array<asnData>>([]);
     const [isAdding, setAdding] = useState(false);

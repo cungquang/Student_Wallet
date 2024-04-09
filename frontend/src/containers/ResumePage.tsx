@@ -41,7 +41,7 @@ const Button = styled.label<{ width: number; height: number; color: string }>`
 `;
 
 const ResumePage: React.FC = () => {
-    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost"; 
+    const ResumeIP = "35.238.55.71"; 
     const uid = localStorage.getItem('uid');
 
     const [fileToUpload, setFileToUpload] = useState<File | null>(null);

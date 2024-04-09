@@ -43,6 +43,7 @@ services:
         context: ./aiService
         dockerfile: Dockerfile
     container_name: unikeep_aiService
+    image: scott0929/aiservice
     # image:
     ports:
       - "3003:3003"

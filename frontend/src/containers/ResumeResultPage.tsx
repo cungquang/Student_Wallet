@@ -34,7 +34,7 @@ const RightWrapper = styled.div`
 
 
 const ResumeResultPage: React.FC = () => {
-    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost"; 
+    const ResumeIP ="35.238.55.71";
     const [assessId, setResumeId] = useState<string | null>(null);
 
     const handleFileNameChange = (newAssessId: string | null) => {

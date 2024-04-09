@@ -7,7 +7,7 @@ import EditableReceiptComponent from '../components/budget/EditableReceiptCompon
 import Header from '../components/common/header';
 import Footer from '../components/common/footer';
 
-const UPLOAD_SERVICE_IP = '34.130.83.40';
+const UPLOAD_SERVICE_IP = '34.130.95.15';
 
 const weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const monthLabels = ['Week1', 'Week2', 'Week3', 'Week4'];
