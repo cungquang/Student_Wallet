@@ -34,6 +34,7 @@ const RightWrapper = styled.div`
 
 
 const ResumeResultPage: React.FC = () => {
+    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost"; 
     const [assessId, setResumeId] = useState<string | null>(null);
 
     const handleFileNameChange = (newAssessId: string | null) => {
@@ -47,11 +48,11 @@ const ResumeResultPage: React.FC = () => {
             <Wrapper>
                 <LeftWrapper>
                     <h3>Resume</h3>
-                    <ResumeImage assessId={assessId} />
+                    <ResumeImage assessId={assessId} ResumeIP={ResumeIP} />
                 </LeftWrapper>
                 <RightWrapper>
-                    <RecJobs assessId={assessId} />
-                    <ResumeHistory onItemSelect={handleFileNameChange} />
+                    <RecJobs assessId={assessId} ResumeIP={ResumeIP} />
+                    <ResumeHistory onItemSelect={handleFileNameChange} ResumeIP={ResumeIP} />
                 </RightWrapper>
             </Wrapper>               
             <Footer />

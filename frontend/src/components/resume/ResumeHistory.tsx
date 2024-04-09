@@ -61,10 +61,10 @@ const TableCell = styled.td`
 
 interface HistoryProps {
     onItemSelect: (assessId: string | null) => void;
+    ResumeIP: string;
 }
 
-const ResumeHistory: React.FC<HistoryProps> = ({ onItemSelect }) =>{
-    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost";
+const ResumeHistory: React.FC<HistoryProps> = ({ onItemSelect, ResumeIP }) =>{
     const [resumeData, setResumeData] = useState<any[]>([]);
     const [selectedItem, setSelectedItem] = useState<string | null>(null);
     const uid = localStorage.getItem('uid');

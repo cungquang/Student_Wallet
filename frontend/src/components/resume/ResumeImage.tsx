@@ -6,6 +6,7 @@ import PdfViewer from './PdfViewer'; // assuming PdfViewer.tsx is in the same di
 
 interface ResumeImageProps {
     assessId: string | null;
+    ResumeIP: string;
 }
 
 const Wrapper = styled.div`
@@ -17,14 +18,13 @@ const Wrapper = styled.div`
     overflow: hidden; 
 `;
 
-const ResumeImage: React.FC<ResumeImageProps> = ({ assessId }) =>{
+const ResumeImage: React.FC<ResumeImageProps> = ({ assessId, ResumeIP }) =>{
     const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchPdf = async () => {
             try {
                 if (assessId) {
-                    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost";
                     const response = await axios.get(`http://${ResumeIP}:3003/resumes/file/${assessId}`, {
                         responseType: 'blob',
                     });

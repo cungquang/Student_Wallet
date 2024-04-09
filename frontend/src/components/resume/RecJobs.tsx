@@ -15,16 +15,16 @@ const FileName = styled.div`
 
 interface RecJobsProps {
     assessId: string | null;
+    ResumeIP: string;
 }
 
-const RecJobs: React.FC<RecJobsProps> = ({ assessId }) => {
+const RecJobs: React.FC<RecJobsProps> = ({ assessId, ResumeIP }) => {
     const [jobsData, setJobsData] = useState<string | null>(null);
     
     useEffect(() => {
         const fetchJobs = async () => {
             if (assessId) {
                 try {
-                    const ResumeIP = process.env.RESUME_SERVICE_IP || "localhost";
                     const response = await axios.get(`http://${ResumeIP}:3003/resumes/jobs/${assessId}`);
                     setJobsData(response.data.result);
                 } catch (error) {
