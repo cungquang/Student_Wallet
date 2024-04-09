@@ -3,7 +3,7 @@ const OpenAI = require('openai');
 require('dotenv').config();
 
 // Initialize OpenAI API with your API key
-const openai = new OpenAI(process.env.OPENAI_API_KEY);
+const openai = new OpenAI("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");
 
 
 // Function to generate a list of suitable jobs for given resume tokens

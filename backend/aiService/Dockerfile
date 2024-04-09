@@ -2,8 +2,8 @@
 FROM node:20.7.0
 
 # Set the working directory to /app
-WORKDIR /app
 
+WORKDIR /asgnService
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
@@ -13,14 +13,10 @@ RUN npm install
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Compile TypeScript code
-RUN npm run build
-
-# Make port 3000 available to the world outside this container
+# Make port 3003 available to the world outside this container
 EXPOSE 3003
-
 # Define environment variable
 ENV PORT=3003
 
 # Run the compiled JavaScript file when the container launches
-CMD ["node", "app.js"]
+CMD ["node",  "app.js"]
