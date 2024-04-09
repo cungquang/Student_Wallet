@@ -72,7 +72,7 @@ const ResumeHistory: React.FC<HistoryProps> = ({ onItemSelect, ResumeIP }) =>{
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://${ResumeIP}:3003/resumes/user/${uid}`);
+                const response = await axios.get(`http://${ResumeIP}/resumes/user/${uid}`);
                 const formattedResumeData = response.data.result.map((resumeItem: any) => ({
                     ...resumeItem,
                     createdAt: new Date(resumeItem.createdAt).toLocaleDateString('en-US', {

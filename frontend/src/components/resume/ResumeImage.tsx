@@ -25,7 +25,7 @@ const ResumeImage: React.FC<ResumeImageProps> = ({ assessId, ResumeIP }) =>{
         const fetchPdf = async () => {
             try {
                 if (assessId) {
-                    const response = await axios.get(`http://${ResumeIP}:3003/resumes/file/${assessId}`, {
+                    const response = await axios.get(`http://${ResumeIP}/resumes/file/${assessId}`, {
                         responseType: 'blob',
                     });
                     const pdfUrl = URL.createObjectURL(response.data);

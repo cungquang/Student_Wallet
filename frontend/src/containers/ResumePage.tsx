@@ -59,7 +59,7 @@ const ResumePage: React.FC = () => {
         if (fileToUpload){
             const formData = new FormData();
             formData.append('resume', fileToUpload);
-            const response = await axios.post(`http://${ResumeIP}:3003/upload/user/${uid}`, formData);
+            const response = await axios.post(`http://${ResumeIP}/upload/user/${uid}`, formData);
             navigate('/resumeresult');
         }
         else{

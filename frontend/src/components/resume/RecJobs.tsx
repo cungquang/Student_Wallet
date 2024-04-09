@@ -25,7 +25,7 @@ const RecJobs: React.FC<RecJobsProps> = ({ assessId, ResumeIP }) => {
         const fetchJobs = async () => {
             if (assessId) {
                 try {
-                    const response = await axios.get(`http://${ResumeIP}:3003/resumes/jobs/${assessId}`);
+                    const response = await axios.get(`http://${ResumeIP}/resumes/jobs/${assessId}`);
                     setJobsData(response.data.result);
                 } catch (error) {
                     console.error('Error fetching jobs data:', error);
