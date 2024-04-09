@@ -1,7 +1,5 @@
-const mongodbhost = process.env.MONGODB_HOST || "localhost"; 
-
 const MongoClient = require('mongodb').MongoClient;
-const url =`mongodb://${mongodbhost}:27017`
+const url =`mongodb://mongodb372:27017`
 const dbName = 'Unikeep';
 
 let _db;
