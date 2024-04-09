@@ -3,7 +3,7 @@ FROM node:20.7.0
 
 # Set the working directory to /app
 
-WORKDIR /asgnService
+WORKDIR /aiService
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
