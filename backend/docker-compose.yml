@@ -37,7 +37,7 @@ services:
       MONGODB_URI: mongodb://mongoDB372:27017
     depends_on:
       - unikeep_mongodb
-
+  
   unikeep_aiService:
     build:
         context: ./aiService
