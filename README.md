@@ -103,4 +103,5 @@ The project adopts a microservices architecture, with each service featuring its
 
 #### Architecture:
 
-![CMPT372_Project_ArchitectureDesign.png](/.attachments/CMPT372_Project_ArchitectureDesign-4097d38a-5b04-43e3-9698-d6fd0c2ba9bd.png)
+![Items](https://github.com/cungquang/Student_Wallet/assets/44489511/4dc2269e-741d-4d1a-886f-b1c65f4af287)
+
