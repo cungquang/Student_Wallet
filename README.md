@@ -15,7 +15,6 @@ There are 3 major features of the web application:
 1. Finance Service
 2. Assignment's Progress
 3. Resume Assessment
-4. Course Progress
 
 Additionally, there are other minor services supporting the application including:
 1. Landing
@@ -45,10 +44,6 @@ Users can access Assignment's Progress from the Home page. It includes:
 ### **3. Resume Assessment:**
 
 Users access the Resume Assessment by choosing "Resume Assessment" on the Home page. It functions as a web form where users submit their resume in PDF format and receive feedback from the application.
-
-### **4. Course Progress:**
-
-Users can track their course progress, including completion status and performance. This may depend on Assignment progress.
 
 -----
 
@@ -105,9 +100,6 @@ The project adopts a microservices architecture, with each service featuring its
 7. **Uploading Service - Upload's Metadata Database (MongoDB) and Upload Storage (Google Storage):**
    - Since the entire application is hosted in the Google Cloud environment, using Google Storage for storing uploaded files is the natural choice.
    - The uploaded files' metadata is often unstructured, with variable data types and additional fields like file names. Therefore, a flexible-schema NoSQL database like MongoDB is ideal for this scenario.
-
-8. **Course Progress Service - Course Database (MongoDB):**
-   - The Course service oversees users' course progress, providing updates on tasks, allowing them to set deadlines for coursework, projects, and midterms, and facilitating information management. Users can mark events as complete once finished. Given the variable nature of assignments and projects across courses, a NoSQL database like MongoDB is ideal for this purpose.
 
 #### Architecture:
 
